@@ -1,0 +1,1 @@
+path for application target storage

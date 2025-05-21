@@ -1,0 +1,41 @@
+.filter-input–table input {
+    width: 100%;
+}
+
+.filter-action-button {
+    min-width: 2em;
+    max-width: 3em;
+    text-align: center;
+}
+
+.filter-long-text {
+    max-width: 13.5em;
+}
+
+.form-side-button {
+    margin-top: 1em;
+}
+
+@media (max-width: 640px) {
+    .filter-input–table {
+        margin-top: 1em;
+    }
+
+    .filter-input–table input {
+        width: 90%;
+    }
+
+    .filter-action-button {
+        min-width: 5em;
+        max-width: 6em;
+        text-align: center;
+    }
+
+    .filter-long-text {
+        max-width: 8em;
+    }
+
+    .form-action-button {
+        margin-top: 1em;
+    }
+}
