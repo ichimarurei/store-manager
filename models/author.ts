@@ -1,8 +1,9 @@
 import { Schema, Types } from 'mongoose';
+import userSchema from './user.schema';
 
 const Log: Schema = new Schema(
     {
-        by: { type: Types.ObjectId, required: true, ref: 'User' },
+        by: { type: Types.ObjectId, required: true, ref: userSchema.modelName },
         time: { type: Date, required: true }
     },
     { _id: false }
@@ -10,7 +11,7 @@ const Log: Schema = new Schema(
 
 export const Author: Schema = new Schema(
     {
-        created: { type: Log, required: true, _id: false },
+        created: { type: Log, required: false, default: null, _id: false },
         edited: { type: Log, required: false, default: null, _id: false },
         deleted: { type: Log, required: false, default: null, _id: false }
     },
@@ -23,7 +24,7 @@ interface ILog {
 }
 
 export interface IAuthor {
-    created: ILog;
+    created?: ILog;
     edited?: ILog;
     deleted?: ILog;
 }

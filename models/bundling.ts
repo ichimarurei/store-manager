@@ -1,9 +1,10 @@
 import { Schema, Types } from 'mongoose';
+import unitSchema from './unit.schema';
 
 const Bundle: Schema = new Schema(
     {
         amount: { type: Number, required: true },
-        unit: { type: Types.ObjectId, required: true, ref: 'Unit' }
+        unit: { type: Types.ObjectId, required: true, ref: unitSchema.modelName }
     },
     { _id: false }
 );
@@ -17,11 +18,11 @@ export const Bundling: Schema = new Schema(
 );
 
 interface IBundle {
-    amount: number;
-    unit: Types.ObjectId;
+    amount?: number;
+    unit?: Types.ObjectId;
 }
 
 export interface IBundling {
-    node: IBundle;
-    contain: IBundle;
+    node?: IBundle;
+    contain?: IBundle;
 }

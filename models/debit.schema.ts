@@ -1,5 +1,7 @@
 import mongoose, { Document, Schema, Types } from 'mongoose';
 import { Author, IAuthor } from './author';
+import customerSchema from './customer.schema';
+import supplierSchema from './supplier.schema';
 
 export enum DebitStatus {
     paid = 'paid',
@@ -9,7 +11,7 @@ export enum DebitStatus {
 
 const Debt: Schema = new Schema(
     {
-        supplier: { type: Types.ObjectId, required: false, ref: 'Supplier', default: null },
+        supplier: { type: Types.ObjectId, required: false, ref: supplierSchema.modelName, default: null },
         reference: { type: String, required: false, default: '' } // source document | reference of the document
     },
     { _id: false }
@@ -17,7 +19,7 @@ const Debt: Schema = new Schema(
 
 const Loan: Schema = new Schema(
     {
-        customer: { type: Types.ObjectId, required: false, ref: 'Customer', default: null },
+        customer: { type: Types.ObjectId, required: false, ref: customerSchema.modelName, default: null },
         reference: { type: String, required: false, default: '' } // source document | reference of the document
     },
     { _id: false }
