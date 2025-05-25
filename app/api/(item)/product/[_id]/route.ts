@@ -1,8 +1,7 @@
 import handshakeDB from '@/lib/mongo';
 import { createDefaultResponse, createErrorResponse } from '@/lib/server.action';
-import userSchema, { UserDocument } from '@/models/user.schema';
-import { update } from '@/mutations/user/update';
-import { Types } from 'mongoose';
+import productSchema, { ProductDocument } from '@/models/product.schema';
+import { update } from '@/mutations/item/product/update';
 import { NextRequest } from 'next/server';
 
 export async function GET(_: NextRequest, { params }: { params: Promise<{ _id: string }> }) {
@@ -11,11 +10,18 @@ export async function GET(_: NextRequest, { params }: { params: Promise<{ _id: s
     try {
         await handshakeDB();
         const { _id } = await params;
-        const user = await userSchema
-            .findOne({ ...(Types.ObjectId.isValid(_id) ? { _id } : { username: _id }) })
+        const item = await productSchema
+            .findOne({ _id })
             .select('-__v')
-            .lean<UserDocument>();
-        response = Response.json(user, { status: !user ? 404 : 200 });
+            .populate({ path: 'category', select: '-__v' })
+            .populate({ path: 'unit', select: '-__v' })
+            .populate({ path: 'bundle.node.unit', select: '-__v' })
+            .populate({ path: 'bundle.contain.unit', select: '-__v' })
+            .populate({ path: 'author.created.by', select: '-__v' })
+            .populate({ path: 'author.edited.by', select: '-__v' })
+            .populate({ path: 'author.deleted.by', select: '-__v' })
+            .lean<ProductDocument>();
+        response = Response.json(item, { status: !item ? 404 : 200 });
     } catch (error) {
         response = createErrorResponse(error);
     }

@@ -15,7 +15,7 @@ const authOptions = {
                 });
                 const user: UserDocument = await response.json();
 
-                return response.ok && user ? { id: `${user._id}`, name: user.name, email: `${user.privilege}@store.manager-v.1.0.0` } : null;
+                return response.ok && user ? { id: `${user._id}`, name: user.username, email: `${user.privilege}@store.manager-v.1.0.0` } : null;
             }
         })
     ],
