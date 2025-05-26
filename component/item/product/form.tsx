@@ -2,6 +2,7 @@ import { doCancelAction, getDefaultProduct, toaster } from '@/lib/client.action'
 import { IBundling } from '@/models/bundling';
 import { ProductDocument } from '@/models/product.schema';
 import { DropdownItem, SubmitResponse } from '@/types/app';
+import dayjs from 'dayjs';
 import { Types } from 'mongoose';
 import { useSession } from 'next-auth/react';
 import { Button } from 'primereact/button';
@@ -25,14 +26,19 @@ const ProductForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; m
     const [loading, setLoading] = useState(false);
     const [categories, setCategories] = useState<DropdownItem[]>([]);
     const [units, setUnits] = useState<DropdownItem[]>([]);
-
     const { data: session } = useSession();
 
     const setBasicInfo = (record: ProductDocument) => {
+        const pictures = record?.images || [];
+
+        if (!pictures.length) {
+            pictures.push(getDefaultProduct());
+        }
+
         setName(record.name || '');
         setCost(record?.cost || 0);
         setDiscount(record?.discount || 0);
-        setImages(record?.images || []);
+        setImages(pictures);
     };
 
     const setReferenceInfo = (record: ProductDocument) => {
@@ -62,7 +68,7 @@ const ProductForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; m
         operator: session?.user?.name,
         ...payloadOptionals(),
         ...payloadBundle(),
-        ...(mode === 'edit' && { _id: record?._id, author: { ...author, created: { ...author.created, by: author.created?.by?._id } } })
+        ...(mode === 'edit' && { _id: record?._id, author: { ...author, created: { time: dayjs(author?.created?.time).toDate(), by: author.created?.by?._id } } })
     });
 
     const submitAction = async () => {
