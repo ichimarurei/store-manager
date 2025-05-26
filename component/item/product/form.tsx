@@ -3,16 +3,31 @@ import { IBundling } from '@/models/bundling';
 import { ProductDocument } from '@/models/product.schema';
 import { DropdownItem, SubmitResponse } from '@/types/app';
 import dayjs from 'dayjs';
+import 'dayjs/locale/id';
 import { Types } from 'mongoose';
 import { useSession } from 'next-auth/react';
 import { Button } from 'primereact/button';
+import { Column } from 'primereact/column';
+import { DataTable } from 'primereact/datatable';
 import { Dropdown } from 'primereact/dropdown';
 import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
+import { Sidebar } from 'primereact/sidebar';
 import { Toast } from 'primereact/toast';
 import { useEffect, useState } from 'react';
 import FormOverlay from './overlay';
 import FormUploader from './uploader';
+
+dayjs.locale('id');
+
+const createLogEntry = (activity: any, action: string): any => ({ name: activity?.by?.name, time: dayjs(activity?.time).format('DD MMM YYYY HH:mm:ss'), action });
+
+const createLogs = (author: any): any[] => {
+    const createdLog = createLogEntry(author.created, 'Dibuat');
+    const editedLog = author.edited ? createLogEntry(author.edited, 'Diubah') : null;
+
+    return [createdLog, ...(editedLog ? [editedLog] : [])];
+};
 
 const ProductForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; mode: 'add' | 'edit'; record: ProductDocument | undefined | null; doSubmit: (record: any, _id?: string) => Promise<SubmitResponse> }) => {
     const [name, setName] = useState('');
@@ -26,7 +41,11 @@ const ProductForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; m
     const [loading, setLoading] = useState(false);
     const [categories, setCategories] = useState<DropdownItem[]>([]);
     const [units, setUnits] = useState<DropdownItem[]>([]);
+    const [visible, setVisible] = useState(false);
+    const [logs, setLogs] = useState<any[]>([]);
     const { data: session } = useSession();
+
+    const setLogInfo = (author?: any | null) => setLogs(createLogs(author));
 
     const setBasicInfo = (record: ProductDocument) => {
         const pictures = record?.images || [];
@@ -45,6 +64,7 @@ const ProductForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; m
         setCategory(record.category?._id);
         setUnit(record.unit?._id);
         setAuthor(record?.author || null);
+        setLogInfo(record?.author);
     };
 
     const setBundling = (record: ProductDocument) =>
@@ -96,6 +116,7 @@ const ProductForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; m
             setReferenceInfo(record);
             setBundling(record);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [record]);
 
     useEffect(() => {
@@ -118,9 +139,23 @@ const ProductForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; m
 
     return (
         <div className="card">
-            <h5>
-                {mode === 'add' ? 'Buat' : 'Ubah'} Produk {mode === 'add' ? 'Baru' : record?.name}
-            </h5>
+            {mode === 'add' && <h5>Buat Produk Baru</h5>}
+            {mode === 'edit' && (
+                <>
+                    <div className="flex align-items-center justify-content-between">
+                        <h5>Ubah Produk {record?.name}</h5>
+                        <Button aria-label="Riwayat Pendataan" icon="pi pi-history" rounded text severity="help" onClick={() => setVisible(true)} tooltip="Riwayat Pendataan" tooltipOptions={{ position: 'left' }} />
+                    </div>
+                    <Sidebar visible={visible} position="right" className="w-full md:w-25rem" onHide={() => setVisible(false)}>
+                        <h2>Riwayat Pendataan</h2>
+                        <DataTable value={logs} size="small" showGridlines stripedRows>
+                            <Column field="action" header="Status" />
+                            <Column field="name" header="Operator" />
+                            <Column field="time" header="Waktu" />
+                        </DataTable>
+                    </Sidebar>
+                </>
+            )}
             <div className="p-fluid formgrid grid gap-field-parent">
                 <div className="field col-12 gap-field">
                     <label htmlFor="name">
