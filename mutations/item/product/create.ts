@@ -4,7 +4,7 @@ import productSchema, { ProductDocument } from '@/models/product.schema';
 import { buildAuthorPayload } from '@/mutations/global/function';
 import { isEmpty } from 'lodash';
 
-const isValidParams = (params: any): boolean => !isEmpty(params?.name) && !isEmpty(params?.category) && !isEmpty(params?.unit) && !isEmpty(params?.cost) && !isEmpty(params?.operator);
+const isValidParams = (params: any): boolean => !isEmpty(params?.name) && !isEmpty(params?.category) && !isEmpty(params?.unit) && !isEmpty(params?.operator);
 
 const buildConditionalData = ({ discount, bundle, images }: { discount?: number; bundle?: IBundling; images?: string[] }): Partial<ProductDocument> => ({
     ...(discount && { discount }),
@@ -31,7 +31,8 @@ export const create = async (params: any): Promise<ProductDocument | null> => {
     try {
         if (isValidParams(params)) {
             await handshakeDB();
-            saved = await productSchema.create(buildCreateData(params));
+            const payload = await buildCreateData(params);
+            saved = await productSchema.create(payload);
         }
     } catch (_) {}
 
