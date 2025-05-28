@@ -1,3 +1,4 @@
+import { getDefaultPhoto } from '@/lib/client.action';
 import { Privilege } from '@/lib/enum';
 import handshakeDB from '@/lib/mongo';
 import userSchema, { UserDocument } from '@/models/user.schema';
@@ -6,9 +7,9 @@ import { isEmpty } from 'lodash';
 const isValidParams = (params: any): boolean => !isEmpty(params?._id) && !isEmpty(params?.name) && !isEmpty(params?.username) && !isEmpty(params?.password);
 
 const buildConditionalData = ({ photo, phone, address, privilege }: { photo?: string; phone?: string; address?: string; privilege?: Privilege }): Partial<UserDocument> => ({
-    ...(photo && { photo }),
-    ...(phone && { phone }),
-    ...(address && { address }),
+    photo: photo || getDefaultPhoto(),
+    phone: phone || '',
+    address: address || '',
     ...(privilege && { privilege })
 });
 

@@ -7,9 +7,9 @@ import { isEmpty } from 'lodash';
 const isValidParams = (params: any): boolean => !isEmpty(params?.name) && !isEmpty(params?.category) && !isEmpty(params?.unit) && !isEmpty(params?.operator) && !isEmpty(params?.author);
 
 const buildConditionalData = ({ discount, bundle, images }: { discount?: number; bundle?: IBundling; images?: string[] }): Partial<ProductDocument> => ({
-    ...(discount && { discount }),
-    ...(bundle && { bundle }),
-    ...(images && { images })
+    discount: discount || 0,
+    bundle: bundle || null,
+    images: images || []
 });
 
 const buildUpdateData = async (params: any): Promise<Partial<ProductDocument>> => {
