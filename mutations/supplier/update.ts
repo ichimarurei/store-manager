@@ -4,8 +4,8 @@ import { isEmpty } from 'lodash';
 
 const buildUpdateData = (params: any): Partial<SupplierDocument> => ({
     name: params.name,
-    ...(params?.phone && { phone: params?.phone }),
-    ...(params?.address && { address: params?.address })
+    phone: params?.phone || '',
+    address: params?.address || ''
 });
 
 export const update = async (params: any): Promise<SupplierDocument | null> => {

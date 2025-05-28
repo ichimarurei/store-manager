@@ -4,8 +4,8 @@ import { isEmpty } from 'lodash';
 
 const buildCreateData = (params: any): Partial<SupplierDocument> => ({
     name: params.name,
-    ...(params?.phone && { phone: params?.phone }),
-    ...(params?.address && { address: params?.address })
+    phone: params?.phone || '',
+    address: params?.address || ''
 });
 
 export const create = async (params: any): Promise<SupplierDocument | null> => {

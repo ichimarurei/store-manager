@@ -21,7 +21,7 @@ export interface ProductDocument extends Document {
     unit: Types.ObjectId;
     cost: number;
     discount?: number;
-    bundle?: IBundling;
+    bundle?: IBundling | null;
     images?: string[];
     author: IAuthor;
 }
