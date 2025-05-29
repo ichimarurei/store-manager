@@ -3,7 +3,7 @@ import { createDefaultResponse, createErrorResponse } from '@/lib/server.action'
 import productSchema, { ProductDocument } from '@/models/product.schema';
 import receiptSchema from '@/models/receipt.schema';
 import salesSchema from '@/models/sales.schema';
-import { reverse, sortBy } from 'lodash';
+import { orderBy } from 'lodash';
 import { NextRequest } from 'next/server';
 
 export async function GET(_: NextRequest) {
@@ -46,7 +46,7 @@ export async function GET(_: NextRequest) {
             stocks.push({ ...item, stock: stock?.qty || 0 });
         });
 
-        response = Response.json(reverse(sortBy(stocks, 'stock')), { status: 200 });
+        response = Response.json(orderBy(stocks, ['stock', 'name'], ['desc', 'asc']), { status: 200 });
     } catch (error) {
         response = createErrorResponse(error);
     }
