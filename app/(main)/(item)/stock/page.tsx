@@ -1,0 +1,106 @@
+'use client';
+
+import { getDefaultProduct } from '@/lib/client.action';
+import { ProductDocument } from '@/models/product.schema';
+import { FilterMatchMode } from 'primereact/api';
+import { Column } from 'primereact/column';
+import { DataTable, DataTableFilterMeta } from 'primereact/datatable';
+import { Image } from 'primereact/image';
+import { InputText } from 'primereact/inputtext';
+import React, { useEffect, useState } from 'react';
+
+interface ProductStock extends ProductDocument {
+    stock: number;
+}
+
+const ProductList = () => {
+    const [list, setList] = useState<ProductStock[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [filters, setFilters] = useState<DataTableFilterMeta>({});
+    const [globalFilterValue, setGlobalFilterValue] = useState('');
+
+    const nameBodyTemplate = (rowData: ProductStock) => (
+        <>
+            <Image alt="product image" src={rowData?.images?.at(0) || getDefaultProduct()} width="32" height="32" style={{ verticalAlign: 'middle' }} imageStyle={{ borderRadius: '50%', objectFit: 'cover' }} />
+            <span style={{ marginLeft: '.5em', verticalAlign: 'middle' }}>{rowData.name}</span>
+        </>
+    );
+    const stockBodyTemplate = (rowData: any) => `${Intl.NumberFormat('id-ID', { style: 'decimal' }).format(rowData.stock)} ${rowData?.unit?.name || ''}`;
+    const bundleBodyTemplate = (rowData: any) => (rowData?.bundle?.node && rowData?.bundle?.contain ? `${rowData.bundle.node?.amount} ${rowData.bundle.node?.unit?.name} = ${rowData.bundle.contain?.amount} ${rowData.bundle.contain?.unit?.name}` : '');
+
+    const initFilters = () => {
+        setGlobalFilterValue('');
+        setFilters({ global: { value: null, matchMode: FilterMatchMode.CONTAINS } });
+    };
+
+    const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        let _filtered = { ...filters };
+        (_filtered['global'] as any).value = value;
+
+        setFilters(_filtered);
+        setGlobalFilterValue(value);
+    };
+
+    const renderHeader = () => {
+        return (
+            <div className="flex justify-content-between flex-wrap">
+                <span className="p-input-icon-left filter-input–table">
+                    <i className="pi pi-search" />
+                    <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Pencarian" />
+                </span>
+            </div>
+        );
+    };
+
+    useEffect(() => {
+        const fetching = async () => {
+            try {
+                const response = await fetch('/api/stock', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
+                setList(await response.json());
+            } catch (_) {}
+
+            setLoading(false);
+            initFilters();
+        };
+
+        setLoading(true);
+        fetching();
+    }, []);
+
+    return (
+        <div className="grid">
+            <div className="col-12">
+                <div className="card">
+                    <h5>Tabel Stok Produk</h5>
+                    <p>Stok yang ditampilkan menggunakan total aktual dalam satuan terkecilnya</p>
+                    <DataTable
+                        className="p-datatable-gridlines"
+                        header={renderHeader}
+                        loading={loading}
+                        filters={filters}
+                        value={list}
+                        rows={10}
+                        paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
+                        currentPageReportTemplate="Menampilkan {first} - {last} , dari total {totalRecords} data"
+                        dataKey="id"
+                        filterDisplay="menu"
+                        emptyMessage="Data kosong/tidak ditemukan!"
+                        paginator
+                        showGridlines
+                        stripedRows
+                        scrollable
+                    >
+                        <Column header="Nama" filterField="name" body={nameBodyTemplate} />
+                        <Column header="Kategori" field="category.name" />
+                        <Column header="Satuan" field="unit.name" />
+                        <Column header="Stok" filterField="stock" body={stockBodyTemplate} />
+                        <Column header="Bundel" body={bundleBodyTemplate} />
+                    </DataTable>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default ProductList;
