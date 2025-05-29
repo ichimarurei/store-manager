@@ -26,9 +26,9 @@ const AppMenu = () => {
                     label: 'Stok',
                     icon: 'pi pi-fw pi-th-large',
                     items: [
-                        { label: 'Aktual', icon: 'pi pi-fw pi-table', to: '/' },
-                        { label: 'Masuk', icon: 'pi pi-fw pi-download', to: '/' },
-                        { label: 'Keluar', icon: 'pi pi-fw pi-upload', to: '/' }
+                        { label: 'Aktual', icon: 'pi pi-fw pi-table', to: '/stock' },
+                        { label: 'Masuk', icon: 'pi pi-fw pi-download', to: '/receipt' },
+                        { label: 'Keluar', icon: 'pi pi-fw pi-upload', to: '/sales' }
                     ]
                 }
             ]
