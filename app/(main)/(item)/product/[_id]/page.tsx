@@ -11,9 +11,7 @@ const payloadSchema = validator.object({
     name: validator.pipe(validator.string('Nama produk harus berupa huruf'), validator.nonEmpty('Nama produk harus diisi'), validator.minLength(2, 'Nama produk minimal 2 huruf')),
     category: validator.pipe(validator.string(), validator.nonEmpty('Kategori produk harus diisi')),
     unit: validator.pipe(validator.string(), validator.nonEmpty('Satuan produk harus diisi')),
-    cost: validator.number('Harga produk harus diisi'),
     operator: validator.pipe(validator.string('Nama operator/admin harus berupa huruf'), validator.nonEmpty('Nama operator/admin harus diisi')),
-    discount: validator.nullish(validator.number('Diskon dari supplier harus berupa angka'), 0),
     images: validator.nullish(validator.array(validator.string('Gambar produk harus valid')), []),
     bundle: validator.nullish(validator.object({ contain: validator.object({ amount: validator.number('Jumlah bundel harus berupa angka'), unit: validator.string('Satuan bundel harus diisi') }) }), null),
     author: validator.nullish(

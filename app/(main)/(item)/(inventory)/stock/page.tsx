@@ -9,23 +9,19 @@ import { Image } from 'primereact/image';
 import { InputText } from 'primereact/inputtext';
 import React, { useEffect, useState } from 'react';
 
-interface ProductStock extends ProductDocument {
-    stock: number;
-}
-
 const ProductList = () => {
-    const [list, setList] = useState<ProductStock[]>([]);
+    const [list, setList] = useState<ProductDocument[]>([]);
     const [loading, setLoading] = useState(true);
     const [filters, setFilters] = useState<DataTableFilterMeta>({});
     const [globalFilterValue, setGlobalFilterValue] = useState('');
 
-    const nameBodyTemplate = (rowData: ProductStock) => (
-        <>
+    const nameBodyTemplate = (rowData: ProductDocument) => (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
             <Image alt="product image" src={rowData?.images?.at(0) || getDefaultProduct()} width="32" height="32" style={{ verticalAlign: 'middle' }} imageStyle={{ borderRadius: '50%', objectFit: 'cover' }} />
             <span style={{ marginLeft: '.5em', verticalAlign: 'middle' }}>{rowData.name}</span>
-        </>
+        </div>
     );
-    const stockBodyTemplate = (rowData: any) => `${Intl.NumberFormat('id-ID', { style: 'decimal' }).format(rowData.stock)} ${rowData?.unit?.name || ''}`;
+    const stockBodyTemplate = (rowData: any) => (rowData?.inventory ? `${Intl.NumberFormat('id-ID', { style: 'decimal' }).format(rowData.inventory)} ${rowData?.unit?.name || ''}` : '');
     const bundleBodyTemplate = (rowData: any) => (rowData?.bundle?.node && rowData?.bundle?.contain ? `${rowData.bundle.node?.amount} ${rowData.bundle.node?.unit?.name} = ${rowData.bundle.contain?.amount} ${rowData.bundle.contain?.unit?.name}` : '');
 
     const initFilters = () => {
@@ -94,7 +90,7 @@ const ProductList = () => {
                         <Column header="Nama" filterField="name" body={nameBodyTemplate} />
                         <Column header="Kategori" field="category.name" />
                         <Column header="Satuan" field="unit.name" />
-                        <Column header="Stok" filterField="stock" body={stockBodyTemplate} />
+                        <Column header="Stok" filterField="inventory" body={stockBodyTemplate} />
                         <Column header="Bundel" body={bundleBodyTemplate} />
                     </DataTable>
                 </div>

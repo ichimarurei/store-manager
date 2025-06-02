@@ -16,7 +16,7 @@ export const getDefaultProduct = () => getDefaultImage('product');
 
 export const formatRp = (value = 0) => {
     try {
-        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value).replace(',00', '');
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value).replace(',00', '').replace('Rp', 'Rp ');
     } catch (_) {
         return 'Rp 0';
     }

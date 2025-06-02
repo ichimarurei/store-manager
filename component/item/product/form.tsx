@@ -10,7 +10,6 @@ import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dropdown } from 'primereact/dropdown';
-import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
 import { Sidebar } from 'primereact/sidebar';
 import { Toast } from 'primereact/toast';
@@ -31,8 +30,6 @@ const createLogs = (author: any): any[] => {
 
 const ProductForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; mode: 'add' | 'edit'; record: ProductDocument | undefined | null; doSubmit: (record: any, _id?: string) => Promise<SubmitResponse> }) => {
     const [name, setName] = useState('');
-    const [cost, setCost] = useState(0);
-    const [discount, setDiscount] = useState(0);
     const [images, setImages] = useState<string[]>([getDefaultProduct()]);
     const [category, setCategory] = useState<Types.ObjectId | undefined>();
     const [unit, setUnit] = useState<Types.ObjectId | undefined>();
@@ -55,8 +52,6 @@ const ProductForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; m
         }
 
         setName(record.name || '');
-        setCost(record?.cost || 0);
-        setDiscount(record?.discount || 0);
         setImages(pictures);
     };
 
@@ -77,13 +72,12 @@ const ProductForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; m
                 : null
         );
 
-    const payloadOptionals = () => ({ category: category || categories[0]?.code, unit: unit || units[0]?.code, discount: discount || 0 });
+    const payloadOptionals = () => ({ category: category || categories[0]?.code, unit: unit || units[0]?.code });
 
     const payloadBundle = () => ({ bundle: (bundle?.contain?.amount || 0) >= 1 ? bundle : null });
 
     const generatePayload = () => ({
         name,
-        cost,
         images,
         operator: session?.user?.name,
         ...payloadOptionals(),
@@ -162,17 +156,6 @@ const ProductForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; m
                         Nama <sup className="text-red-500">*</sup>
                     </label>
                     <InputText id="name" type="text" value={name} onChange={({ target }) => setName(target.value)} />
-                </div>
-                <div className="field col-12 md:col-6 gap-field">
-                    <label htmlFor="cost">
-                        Modal <sup className="text-red-500">*</sup>
-                    </label>
-                    <InputNumber id="cost" placeholder="Modal produk" value={cost} onValueChange={(e) => setCost(e.value || 0)} min={0} maxFractionDigits={0} mode="currency" currency="IDR" />
-                    <small>Dalam rupiah (IDR)</small>
-                </div>
-                <div className="field col-12 md:col-6 gap-field">
-                    <label htmlFor="discount">Diskon</label>
-                    <InputNumber id="discount" placeholder="Diskon dari supplier" value={discount} onValueChange={(e) => setDiscount(e.value || 0)} min={0} maxFractionDigits={2} suffix="%" />
                 </div>
                 <div className="field col-12 md:col-5 gap-field">
                     <label htmlFor="category">

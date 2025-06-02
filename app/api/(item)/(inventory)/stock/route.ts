@@ -1,0 +1,29 @@
+import handshakeDB from '@/lib/mongo';
+import { createDefaultResponse, createErrorResponse } from '@/lib/server.action';
+import productSchema, { ProductDocument } from '@/models/product.schema';
+import { NextRequest } from 'next/server';
+
+export async function GET(_: NextRequest) {
+    let response: Response = createDefaultResponse();
+
+    try {
+        await handshakeDB();
+        const items = await productSchema
+            .find()
+            .select('-__v')
+            .sort({ inventory: 'desc', name: 'asc' })
+            .populate({ path: 'category', select: '-__v' })
+            .populate({ path: 'unit', select: '-__v' })
+            .populate({ path: 'bundle.node.unit', select: '-__v' })
+            .populate({ path: 'bundle.contain.unit', select: '-__v' })
+            .populate({ path: 'author.created.by', select: '-__v' })
+            .populate({ path: 'author.edited.by', select: '-__v' })
+            .populate({ path: 'author.deleted.by', select: '-__v' })
+            .lean<ProductDocument[]>();
+        response = Response.json(items, { status: 200 });
+    } catch (error) {
+        response = createErrorResponse(error);
+    }
+
+    return response;
+}

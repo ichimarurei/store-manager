@@ -1,6 +1,5 @@
 import handshakeDB from '@/lib/mongo';
 import { IAuthor } from '@/models/author';
-import { ProductDocument } from '@/models/product.schema';
 import userSchema, { UserDocument } from '@/models/user.schema';
 import dayjs from 'dayjs';
 import dayjsUTC from 'dayjs/plugin/utc';
@@ -9,7 +8,7 @@ import { Types } from 'mongoose';
 
 dayjs.extend(dayjsUTC);
 
-export const buildAuthorPayload = async (operator: string, mode: 'create' | 'update' | 'delete', authored?: IAuthor): Promise<Partial<ProductDocument> | null> => {
+export const buildAuthorPayload = async <T>(operator: string, mode: 'create' | 'update' | 'delete', authored?: IAuthor): Promise<Partial<T | any> | null> => {
     let by: Types.ObjectId | {} | null = null;
 
     try {

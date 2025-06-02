@@ -1,6 +1,6 @@
 'use client';
 
-import { formatRp, getDefaultProduct } from '@/lib/client.action';
+import { getDefaultProduct } from '@/lib/client.action';
 import { ProductDocument } from '@/models/product.schema';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -20,14 +20,12 @@ const ProductList = () => {
     const router = useRouter();
 
     const nameBodyTemplate = (rowData: ProductDocument) => (
-        <Link href={`/product/${rowData._id}`}>
+        <Link href={`/product/${rowData._id}`} style={{ display: 'flex', alignItems: 'center' }}>
             <Image alt="product image" src={rowData?.images?.at(0) || getDefaultProduct()} width="32" height="32" style={{ verticalAlign: 'middle' }} imageStyle={{ borderRadius: '50%', objectFit: 'cover' }} />
             <span style={{ marginLeft: '.5em', verticalAlign: 'middle' }}>{rowData.name}</span>
         </Link>
     );
     const editBodyTemplate = (rowData: ProductDocument) => <Button icon="pi pi-pencil" outlined onClick={() => router.push(`/product/${rowData._id}`)} />;
-    const discountBodyTemplate = (rowData: ProductDocument) => `${rowData.discount ? `${rowData.discount} %` : ''}`;
-    const costBodyTemplate = (rowData: any) => `${formatRp(rowData.cost)} / ${rowData.unit?.name}`;
     const bundleBodyTemplate = (rowData: any) => (rowData?.bundle?.node && rowData?.bundle?.contain ? `${rowData.bundle.node?.amount} ${rowData.bundle.node?.unit?.name} = ${rowData.bundle.contain?.amount} ${rowData.bundle.contain?.unit?.name}` : '');
 
     const initFilters = () => {
@@ -97,8 +95,6 @@ const ProductList = () => {
                         <Column header="Kategori" field="category.name" style={{ maxWidth: '6em' }} />
                         <Column header="Satuan" field="unit.name" style={{ maxWidth: '6em' }} />
                         <Column header="Bundel" body={bundleBodyTemplate} style={{ maxWidth: '8em' }} />
-                        <Column header="Modal" filterField="cost" body={costBodyTemplate} style={{ maxWidth: '7em' }} />
-                        <Column header="Diskon" filterField="discount" body={discountBodyTemplate} style={{ maxWidth: '5em' }} />
                         <Column header="" body={editBodyTemplate} className="filter-action-button" />
                     </DataTable>
                 </div>
