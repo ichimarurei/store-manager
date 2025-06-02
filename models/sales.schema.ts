@@ -44,7 +44,7 @@ const Sales: Schema = new Schema({
     paid: { type: Number, required: true },
     change: { type: Number, required: false, default: 0 },
     tax: { type: Number, required: false, default: 0 },
-    scheduled: { type: Date, required: false, default: null },
+    date: { type: Date, required: false, default: null },
     author: { type: Author, required: true, _id: false }
 });
 
@@ -79,7 +79,7 @@ export interface SalesDocument extends Document {
     paid: number;
     change?: number;
     tax?: number;
-    scheduled?: Date;
+    date?: Date | null;
     author: IAuthor;
 }
 

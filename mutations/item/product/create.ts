@@ -6,21 +6,19 @@ import { isEmpty } from 'lodash';
 
 const isValidParams = (params: any): boolean => !isEmpty(params?.name) && !isEmpty(params?.category) && !isEmpty(params?.unit) && !isEmpty(params?.operator);
 
-const buildConditionalData = ({ discount, bundle, images }: { discount?: number; bundle?: IBundling; images?: string[] }): Partial<ProductDocument> => ({
-    discount: discount || 0,
+const buildConditionalData = ({ bundle, images }: { bundle?: IBundling; images?: string[] }): Partial<ProductDocument> => ({
     bundle: bundle || null,
     images: images || []
 });
 
 const buildCreateData = async (params: any): Promise<Partial<ProductDocument>> => {
-    const authorized = await buildAuthorPayload(params.operator, 'create');
+    const authorized = await buildAuthorPayload<ProductDocument>(params.operator, 'create');
 
     return {
         name: params.name,
         category: params.category,
         unit: params.unit,
-        cost: params.cost,
-        ...buildConditionalData({ discount: params?.discount, bundle: params?.bundle, images: params?.images }),
+        ...buildConditionalData({ bundle: params?.bundle, images: params?.images }),
         ...authorized
     };
 };

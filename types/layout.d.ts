@@ -1,3 +1,4 @@
+import { DataTableFilterMeta } from 'primereact/datatable';
 import React, { Dispatch, HTMLAttributeAnchorTarget, ReactNode, SetStateAction } from 'react';
 
 /* Breadcrumb Types */
@@ -96,3 +97,11 @@ export interface AppMenuItemProps {
     root?: boolean;
     className?: string;
 }
+
+export type TableInventoryProps = {
+    list: any[];
+    loading: boolean;
+    filters: DataTableFilterMeta | {};
+    globalFilterValue: string;
+    onGlobalFilterChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+};

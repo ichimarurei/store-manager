@@ -23,7 +23,7 @@ const UserList = () => {
     const { data: session } = useSession();
 
     const nameBodyTemplate = (rowData: UserDocument) => (
-        <Link href={`/user/${rowData._id}`}>
+        <Link href={`/user/${rowData._id}`} style={{ display: 'flex', alignItems: 'center' }}>
             <Image alt="profile picture" src={rowData?.photo || getDefaultPhoto()} width="32" height="32" style={{ verticalAlign: 'middle' }} imageStyle={{ borderRadius: '50%', objectFit: 'cover' }} />
             <span style={{ marginLeft: '.5em', verticalAlign: 'middle' }}>{rowData.name}</span>
         </Link>
