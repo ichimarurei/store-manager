@@ -66,7 +66,7 @@ const ItemPickOverlay = ({ item, mode, addToCart }: { item?: ProductDocument; mo
                     </div>
                 </div>
                 <Button
-                    label="Tambahkan"
+                    label="Tambah"
                     disabled={!qty || !unit}
                     onClick={() => {
                         overlayPanel.current?.hide();
