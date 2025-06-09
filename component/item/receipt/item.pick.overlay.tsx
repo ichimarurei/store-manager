@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from 'react';
 
 const Navigator = ({ mode, item, onClicking }: { mode: 'button' | 'link'; item?: ProductDocument; onClicking: (e: React.SyntheticEvent) => void }) => {
     return mode === 'button' ? (
-        <Button icon="pi pi-check" outlined onClick={onClicking} />
+        <Button icon="pi pi-plus" outlined onClick={onClicking} />
     ) : (
         mode === 'link' && (
             <Link href="javascript:void(0)" style={{ display: 'flex', alignItems: 'center' }} onClick={onClicking}>
@@ -67,7 +67,6 @@ const ItemPickOverlay = ({ item, mode, addToCart }: { item?: ProductDocument; mo
                 </div>
                 <Button
                     label="Simpan"
-                    icon="pi pi-cart"
                     disabled={!qty || !unit}
                     onClick={() => {
                         overlayPanel.current?.hide();
