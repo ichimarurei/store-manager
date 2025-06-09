@@ -104,4 +104,6 @@ export type TableInventoryProps = {
     filters: DataTableFilterMeta | {};
     globalFilterValue: string;
     onGlobalFilterChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    dateFilter: (Date | null)[] | null;
+    setDateFilter: (value: (Date | null)[] | null) => void;
 };

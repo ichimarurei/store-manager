@@ -36,7 +36,7 @@ const FormOverlay = ({ units, unit, bundle, setBundle }: { units: DropdownItem[]
                 <div className="p-fluid formgrid grid gap-field-parent">
                     <div className="field col-12 gap-field">
                         <label htmlFor="bundleUnit">Satuan</label>
-                        <Dropdown id="bundleUnit" optionLabel="name" placeholder="Satuan Bundel" value={getUnitDetail(bundle?.node?.unit || units[0]?.code)} options={units} onChange={handleUnitChange} />
+                        <Dropdown id="bundleUnit" optionLabel="name" placeholder="Satuan bundel" value={getUnitDetail(bundle?.node?.unit || units[0]?.code)} options={units} onChange={handleUnitChange} />
                     </div>
                     <div className="field col-12 gap-field">
                         <label htmlFor="bundleAmount">Qty</label>
