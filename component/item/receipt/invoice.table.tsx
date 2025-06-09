@@ -9,22 +9,22 @@ import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { RenderHeader } from './header';
 
-export const TableByReceipt = ({ list, loading, filters, globalFilterValue, onGlobalFilterChange }: TableInventoryProps) => {
+export const TableByReceipt = ({ list, loading, filters, globalFilterValue, onGlobalFilterChange, dateFilter, setDateFilter }: TableInventoryProps) => {
     const router = useRouter();
 
     const referenceBodyTemplate = (rowData: ReceiptDocument) => (
-        <Link href={`/receipt/invoice/${rowData._id}`} style={{ display: 'flex', alignItems: 'center' }}>
+        <Link href={`/receipt/${rowData._id}`} style={{ display: 'flex', alignItems: 'center' }}>
             {rowData.reference}
         </Link>
     );
-    const editBodyTemplate = (rowData: ReceiptDocument) => <Button icon="pi pi-pencil" outlined onClick={() => router.push(`/receipt/invoice/${rowData._id}`)} />;
+    const editBodyTemplate = (rowData: ReceiptDocument) => <Button icon="pi pi-pencil" outlined onClick={() => router.push(`/receipt/${rowData._id}`)} />;
     const dateBodyTemplate = ({ date }: any) => dayjs(date).format('DD MMMM YYYY');
     const costBodyTemplate = (rowData: any) => formatRp(rowData.cost);
 
     return (
         <DataTable
             className="p-datatable-gridlines"
-            header={() => <RenderHeader modePreview="faktur" globalFilterValue={globalFilterValue} onGlobalFilterChange={onGlobalFilterChange} />}
+            header={() => <RenderHeader modePreview="faktur" globalFilterValue={globalFilterValue} onGlobalFilterChange={onGlobalFilterChange} dateFilter={dateFilter} setDateFilter={setDateFilter} />}
             loading={loading}
             filters={filters}
             value={list}

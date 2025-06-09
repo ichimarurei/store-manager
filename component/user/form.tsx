@@ -128,13 +128,13 @@ const UserForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; mode
                     <label htmlFor="username">
                         Nama Akun <sup className="text-red-500">*</sup>
                     </label>
-                    <InputText id="username" type="text" placeholder="Username" value={username} onChange={({ target }) => setUsername(target.value)} readOnly={mode === 'edit'} />
+                    <InputText id="username" type="text" placeholder="Nama akun" value={username} onChange={({ target }) => setUsername(target.value)} readOnly={mode === 'edit'} />
                 </div>
                 <div className="field col-12 md:col-6 gap-field">
                     <label htmlFor="password">
                         Sandi <sup className="text-red-500">*</sup>
                     </label>
-                    <Password id="password" type="text" placeholder="Password" value={password} onChange={({ target }) => setPassword(target.value)} toggleMask />
+                    <Password id="password" type="text" placeholder="Kata sandi" value={password} onChange={({ target }) => setPassword(target.value)} toggleMask />
                     {mode === 'edit' && <small>Sandi yang ditampilkan sudah dienkripsi</small>}
                 </div>
                 <div className="field col-12 md:col-6">

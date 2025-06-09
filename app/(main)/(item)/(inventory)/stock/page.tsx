@@ -3,17 +3,20 @@
 import { getDefaultProduct } from '@/lib/client.action';
 import { ProductDocument } from '@/models/product.schema';
 import { FilterMatchMode } from 'primereact/api';
+import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable, DataTableFilterMeta } from 'primereact/datatable';
 import { Image } from 'primereact/image';
 import { InputText } from 'primereact/inputtext';
-import React, { useEffect, useState } from 'react';
+import { Toast } from 'primereact/toast';
+import React, { useEffect, useRef, useState } from 'react';
 
 const ProductList = () => {
     const [list, setList] = useState<ProductDocument[]>([]);
     const [loading, setLoading] = useState(true);
     const [filters, setFilters] = useState<DataTableFilterMeta>({});
     const [globalFilterValue, setGlobalFilterValue] = useState('');
+    const toast = useRef<Toast | null>(null);
 
     const nameBodyTemplate = (rowData: ProductDocument) => (
         <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -49,6 +52,21 @@ const ProductList = () => {
         );
     };
 
+    const syncStock = async () => {
+        try {
+            toast.current?.show({ severity: 'info', summary: 'Sinkronisasi Stok', detail: 'Memproses sinkronisasi stok produk ...' });
+            setLoading(true);
+            const response = await fetch('/api/stock/sync', { method: 'GET', headers: { 'Content-Type': 'application/json' } });
+
+            if (response.ok) {
+                window.location.reload();
+            }
+        } catch (_) {
+            toast.current?.show({ severity: 'warn', summary: 'Gagal sinkron stok!', detail: 'Data stok tidak dapat disinkronisasi !' });
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         const fetching = async () => {
             try {
@@ -68,7 +86,10 @@ const ProductList = () => {
         <div className="grid">
             <div className="col-12">
                 <div className="card">
-                    <h5>Tabel Stok Produk</h5>
+                    <div className="flex align-items-center justify-content-between">
+                        <h5>Tabel Stok Produk</h5>
+                        <Button aria-label="Sinkron stok" icon="pi pi-sync" rounded text severity="help" onClick={async () => await syncStock()} tooltip="Sinkron stok" tooltipOptions={{ position: 'left' }} />
+                    </div>
                     <p>Stok yang ditampilkan menggunakan total aktual dalam satuan terkecilnya</p>
                     <DataTable
                         className="p-datatable-gridlines"
@@ -95,6 +116,7 @@ const ProductList = () => {
                     </DataTable>
                 </div>
             </div>
+            <Toast ref={toast} />
         </div>
     );
 };

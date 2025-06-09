@@ -3,11 +3,15 @@
 import { TableByReceipt } from '@/component/item/receipt/invoice.table';
 import { TableByItem } from '@/component/item/receipt/item.table';
 import { ReceiptDocument } from '@/models/receipt.schema';
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
 import { FilterMatchMode } from 'primereact/api';
 import { Button } from 'primereact/button';
 import { DataTableFilterMeta } from 'primereact/datatable';
 import { Menu } from 'primereact/menu';
 import React, { useEffect, useRef, useState } from 'react';
+
+dayjs.extend(isBetween);
 
 const calculateSumCost = (products: any[]) => {
     let sumCost = 0;
@@ -56,7 +60,17 @@ const processInvoiceData = (result: ReceiptDocument[]): any[] => {
     return receipt;
 };
 
-const processReceiptData = (result: ReceiptDocument[]): { receipt: any[]; product: any[] } => ({ receipt: processInvoiceData(result), product: processProductData(result) });
+const processReceiptData = (result: ReceiptDocument[], dates: (Date | null)[] | null): { receipt: any[]; product: any[] } => {
+    let receipts = processInvoiceData(result);
+    let products = processProductData(result);
+
+    if (dates?.length === 2) {
+        receipts = receipts.filter(({ date }) => (dates?.at(1) ? dayjs(date).isBetween(dayjs(dates[0]), dayjs(dates[1]), 'days', '[]') : dayjs(date).isSame(dayjs(dates[0]), 'day')));
+        products = products.filter(({ date }) => (dates?.at(1) ? dayjs(date).isBetween(dayjs(dates[0]), dayjs(dates[1]), 'days', '[]') : dayjs(date).isSame(dayjs(dates[0]), 'day')));
+    }
+
+    return { receipt: receipts, product: products };
+};
 
 const ReceiptList = () => {
     const [modePreview, setModePreview] = useState<'produk' | 'faktur'>('produk');
@@ -64,6 +78,7 @@ const ReceiptList = () => {
     const [loading, setLoading] = useState(true);
     const [filters, setFilters] = useState<DataTableFilterMeta>({});
     const [globalFilterValue, setGlobalFilterValue] = useState('');
+    const [dateFilter, setDateFilter] = useState<(Date | null)[] | null>(null);
     const modeMenu = useRef<Menu>(null);
 
     const initFilters = () => {
@@ -85,7 +100,7 @@ const ReceiptList = () => {
             try {
                 const response = await fetch('/api/receipt', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
                 const result: ReceiptDocument[] = await response.json();
-                setList(processReceiptData(result));
+                setList(processReceiptData(result, dateFilter));
             } catch (_) {}
 
             setLoading(false);
@@ -94,7 +109,7 @@ const ReceiptList = () => {
 
         setLoading(true);
         fetching();
-    }, []);
+    }, [dateFilter]);
 
     return (
         <div className="grid">
@@ -114,13 +129,11 @@ const ReceiptList = () => {
                             />
                         </div>
                     </div>
-                    <p>
-                        Berdasarkan {modePreview === 'produk' ? 'Produk' : 'Faktur'} <mark>untuk merubah, klik tombol &#8942;</mark>
-                    </p>
+                    <p>Menampilkan data berdasarkan {modePreview === 'produk' ? 'Produk' : 'Faktur'}</p>
                     {modePreview === 'produk' ? (
-                        <TableByItem list={list.product} filters={filters} globalFilterValue={globalFilterValue} loading={loading} onGlobalFilterChange={onGlobalFilterChange} />
+                        <TableByItem list={list.product} filters={filters} globalFilterValue={globalFilterValue} onGlobalFilterChange={onGlobalFilterChange} dateFilter={dateFilter} setDateFilter={setDateFilter} loading={loading} />
                     ) : (
-                        <TableByReceipt list={list.receipt} filters={filters} globalFilterValue={globalFilterValue} loading={loading} onGlobalFilterChange={onGlobalFilterChange} />
+                        <TableByReceipt list={list.receipt} filters={filters} globalFilterValue={globalFilterValue} onGlobalFilterChange={onGlobalFilterChange} dateFilter={dateFilter} setDateFilter={setDateFilter} loading={loading} />
                     )}
                 </div>
             </div>

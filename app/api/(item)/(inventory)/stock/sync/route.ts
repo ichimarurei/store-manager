@@ -55,22 +55,18 @@ export async function GET(req: NextRequest) {
     let response: Response = createDefaultResponse();
 
     try {
-        if (req.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
-            response = Response.json({ error: 'Unauthorized' }, { status: 401 });
-        } else {
-            await handshakeDB();
-            const items = await productSchema.find().sort({ name: 'asc' }).select('-__v').lean<ProductDocument[]>();
-            const receipts = await receiptSchema.find().sort({ date: 'asc' }).select('-__v').lean<ReceiptDocument[]>();
-            const sales = await salesSchema.find().sort({ date: 'asc' }).select('-__v').lean<SalesDocument[]>();
-            const inbound = processReceipt(items, receipts, {});
-            const inventories = processSales(items, sales, inbound);
+        await handshakeDB();
+        const items = await productSchema.find().sort({ name: 'asc' }).select('-__v').lean<ProductDocument[]>();
+        const receipts = await receiptSchema.find().sort({ date: 'asc' }).select('-__v').lean<ReceiptDocument[]>();
+        const sales = await salesSchema.find().sort({ date: 'asc' }).select('-__v').lean<SalesDocument[]>();
+        const inbound = processReceipt(items, receipts, {});
+        const inventories = processSales(items, sales, inbound);
 
-            for (const key in inventories) {
-                await productSchema.findOneAndUpdate({ _id: key }, { inventory: inventories?.[key] || 0 }, { new: true, lean: true }).lean<ProductDocument>();
-            }
-
-            response = Response.json({ inventories }, { status: 200 });
+        for (const key in inventories) {
+            await productSchema.findOneAndUpdate({ _id: key }, { inventory: inventories?.[key] || 0 }, { new: true, lean: true }).lean<ProductDocument>();
         }
+
+        response = Response.json({ inventories }, { status: 200 });
     } catch (error) {
         response = createErrorResponse(error);
     }
