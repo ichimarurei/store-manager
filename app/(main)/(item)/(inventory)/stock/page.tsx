@@ -1,6 +1,7 @@
 'use client';
 
 import { getDefaultProduct } from '@/lib/client.action';
+import { doSyncStock } from '@/lib/server.action';
 import { ProductDocument } from '@/models/product.schema';
 import { FilterMatchMode } from 'primereact/api';
 import { Button } from 'primereact/button';
@@ -56,9 +57,8 @@ const ProductList = () => {
         try {
             toast.current?.show({ severity: 'info', summary: 'Sinkronisasi Stok', detail: 'Memproses sinkronisasi stok produk ...' });
             setLoading(true);
-            const response = await fetch('/api/stock/sync', { method: 'GET', headers: { 'Content-Type': 'application/json' } });
 
-            if (response.ok) {
+            if (await doSyncStock()) {
                 window.location.reload();
             }
         } catch (_) {

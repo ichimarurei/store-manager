@@ -1,9 +1,7 @@
 import handshakeDB from '@/lib/mongo';
-import { createDefaultResponse, createErrorResponse } from '@/lib/server.action';
 import productSchema, { ProductDocument } from '@/models/product.schema';
 import receiptSchema, { ReceiptDocument } from '@/models/receipt.schema';
 import salesSchema, { SalesDocument } from '@/models/sales.schema';
-import { NextRequest } from 'next/server';
 
 const isBundleUnitMatching = (item: ProductDocument, unit: string): boolean => (item?.bundle?.node ? String(item.bundle.node?.unit) === unit : false);
 
@@ -51,8 +49,8 @@ const processSales = (items: ProductDocument[], sales: SalesDocument[], inventor
     return inventories;
 };
 
-export async function GET(_: NextRequest) {
-    let response: Response = createDefaultResponse();
+export const syncStock = async () => {
+    let inventories: any | null = null;
 
     try {
         await handshakeDB();
@@ -60,16 +58,12 @@ export async function GET(_: NextRequest) {
         const receipts = await receiptSchema.find().sort({ date: 'asc' }).select('-__v').lean<ReceiptDocument[]>();
         const sales = await salesSchema.find().sort({ date: 'asc' }).select('-__v').lean<SalesDocument[]>();
         const inbound = processReceipt(items, receipts, {});
-        const inventories = processSales(items, sales, inbound);
+        inventories = processSales(items, sales, inbound);
 
         for (const key in inventories) {
             await productSchema.findOneAndUpdate({ _id: key }, { inventory: inventories?.[key] || 0 }, { new: true, lean: true }).lean<ProductDocument>();
         }
+    } catch (_) {}
 
-        response = Response.json({ inventories }, { status: 200 });
-    } catch (error) {
-        response = createErrorResponse(error);
-    }
-
-    return response;
-}
+    return inventories;
+};
