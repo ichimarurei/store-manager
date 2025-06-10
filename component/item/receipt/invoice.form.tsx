@@ -1,6 +1,7 @@
 import SupplierMiniForm from '@/component/supplier/form.mini';
 import { ReceiptDocument } from '@/models/receipt.schema';
 import { DropdownItem, SubmitResponse } from '@/types/app';
+import { useRouter } from 'next/navigation';
 import { Button } from 'primereact/button';
 import { Calendar } from 'primereact/calendar';
 import { Dropdown } from 'primereact/dropdown';
@@ -60,6 +61,7 @@ const InvoiceForm = ({ mode, record, doSubmit }: { mode: 'add' | 'edit'; record:
     const [visible, setVisible] = useState(false);
     const [loading, setLoading] = useState(false);
     const toast = useRef<Toast | null>(null);
+    const router = useRouter();
 
     const getSuppliers = async () => setSuppliers(await fetchSuppliers());
 
@@ -118,10 +120,9 @@ const InvoiceForm = ({ mode, record, doSubmit }: { mode: 'add' | 'edit'; record:
                     />
                 </div>
             </div>
-            <div className="p-fluid formgrid grid gap-field-parent">
-                <div className="field col-12">
-                    <Button label="Simpan" onClick={async () => await submitAction()} />
-                </div>
+            <div className="flex justify-content-between flex-wrap">
+                <Button label="Batal" icon="pi pi-times" severity="info" onClick={() => router.replace('/receipt')} />
+                <Button label="Simpan" icon="pi pi-check" className="form-action-button" onClick={async () => await submitAction()} />
             </div>
             <Sidebar visible={visible} position="right" className="w-full md:w-25rem" onHide={() => setVisible(false)}>
                 <h2>Supplier Baru</h2>
