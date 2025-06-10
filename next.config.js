@@ -8,6 +8,7 @@ const withPWA = require('next-pwa')({
 
 const nextConfig = {
     reactStrictMode: true,
+    staticPageGenerationTimeout: 300, // in seconds
     experimental: { serverActions: true }
 };
 
