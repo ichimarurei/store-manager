@@ -51,7 +51,7 @@ const processSales = (items: ProductDocument[], sales: SalesDocument[], inventor
     return inventories;
 };
 
-export async function GET(req: NextRequest) {
+export async function GET(_: NextRequest) {
     let response: Response = createDefaultResponse();
 
     try {
