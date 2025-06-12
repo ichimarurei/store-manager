@@ -5164,9 +5164,8 @@
 
   .p-steps .p-steps-item .p-menuitem-link {
     background: transparent;
-    transition: box-shadow 0.2s;
-    border-radius: 6px;
-    background: transparent;
+    transition: box-shadow 0.15s;
+    border-radius: 4px;
   }
   .p-steps .p-steps-item .p-menuitem-link .p-steps-number {
     color: rgba(255, 255, 255, 0.87);
