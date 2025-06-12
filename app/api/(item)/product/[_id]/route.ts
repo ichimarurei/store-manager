@@ -1,11 +1,11 @@
 import handshakeDB from '@/lib/mongo';
-import { createDefaultResponse, createErrorResponse } from '@/lib/server.action';
+import { createErrorResponse } from '@/lib/server.action';
 import productSchema, { ProductDocument } from '@/models/product.schema';
 import { update } from '@/mutations/item/product/update';
 import { NextRequest } from 'next/server';
 
 export async function GET(_: NextRequest, { params }: { params: Promise<{ _id: string }> }) {
-    let response: Response = createDefaultResponse();
+    let response: Response;
 
     try {
         await handshakeDB();
@@ -30,7 +30,7 @@ export async function GET(_: NextRequest, { params }: { params: Promise<{ _id: s
 }
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ _id: string }> }) {
-    let response: Response = createDefaultResponse();
+    let response: Response;
 
     try {
         await handshakeDB();

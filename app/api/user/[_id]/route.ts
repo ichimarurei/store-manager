@@ -1,12 +1,12 @@
 import handshakeDB from '@/lib/mongo';
-import { createDefaultResponse, createErrorResponse } from '@/lib/server.action';
+import { createErrorResponse } from '@/lib/server.action';
 import userSchema, { UserDocument } from '@/models/user.schema';
 import { update } from '@/mutations/user/update';
 import { Types } from 'mongoose';
 import { NextRequest } from 'next/server';
 
 export async function GET(_: NextRequest, { params }: { params: Promise<{ _id: string }> }) {
-    let response: Response = createDefaultResponse();
+    let response: Response;
 
     try {
         await handshakeDB();
@@ -24,7 +24,7 @@ export async function GET(_: NextRequest, { params }: { params: Promise<{ _id: s
 }
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ _id: string }> }) {
-    let response: Response = createDefaultResponse();
+    let response: Response;
 
     try {
         await handshakeDB();
