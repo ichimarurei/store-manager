@@ -4,14 +4,14 @@ import receiptSchema, { ReceiptDocument } from '@/models/receipt.schema';
 import { update } from '@/mutations/item/inventory/receipt/update';
 import { NextRequest } from 'next/server';
 
-export async function GET(_: NextRequest, { params }: { params: Promise<{ ids: string[] }> }) {
+export async function GET(_: NextRequest, { params }: { params: Promise<{ _id: string }> }) {
     let response: Response = createDefaultResponse();
 
     try {
         await handshakeDB();
-        const { ids } = await params;
+        const { _id } = await params;
         const item = await receiptSchema
-            .findOne(ids.length === 1 ? { _id: ids[0] } : { _id: ids[0], 'products.product._id': ids[1] })
+            .findOne({ _id })
             .select('-__v')
             .populate({
                 path: 'products.product',
@@ -23,7 +23,7 @@ export async function GET(_: NextRequest, { params }: { params: Promise<{ ids: s
                     { path: 'bundle.contain.unit', select: '-__v' }
                 ]
             })
-            .populate({ path: 'products.unit', select: '-__v' })
+            .populate({ path: 'supplier', select: '-__v' })
             .populate({ path: 'author.created.by', select: '-__v' })
             .populate({ path: 'author.edited.by', select: '-__v' })
             .populate({ path: 'author.deleted.by', select: '-__v' })
@@ -36,14 +36,14 @@ export async function GET(_: NextRequest, { params }: { params: Promise<{ ids: s
     return response;
 }
 
-export async function PUT(request: NextRequest, { params }: { params: Promise<{ ids: string[] }> }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ _id: string }> }) {
     let response: Response = createDefaultResponse();
 
     try {
         await handshakeDB();
-        const { ids } = await params;
+        const { _id } = await params;
         const payload = await request.json();
-        const saved = await update({ ...payload, ...(ids.length === 1 ? { _id: ids[0] } : { _id: ids[0], 'products.product._id': ids[1] }) });
+        const saved = await update({ ...payload, _id });
         response = Response.json({ saved: !saved?._id ? false : true }, { status: 200 });
     } catch (error) {
         response = createErrorResponse(error);

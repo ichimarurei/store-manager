@@ -5,12 +5,13 @@ import dayjs from 'dayjs';
 import dayjsUTC from 'dayjs/plugin/utc';
 import { isEmpty } from 'lodash';
 import { Types } from 'mongoose';
+import { v4 as uuid } from 'uuid';
 
 dayjs.extend(dayjsUTC);
 
 const buildConditionalData = ({ reference, supplier, date }: { reference?: string; supplier?: Types.ObjectId; date?: Date }): Partial<ReceiptDocument> => ({
     date: date || dayjs().utc().toDate(),
-    reference: reference || '',
+    reference: reference || uuid().replaceAll('-', '').toUpperCase(),
     supplier: supplier || null
 });
 

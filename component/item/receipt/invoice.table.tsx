@@ -2,12 +2,15 @@ import { formatRp } from '@/lib/client.action';
 import { ReceiptDocument } from '@/models/receipt.schema';
 import { TableInventoryProps } from '@/types/layout';
 import dayjs from 'dayjs';
+import 'dayjs/locale/id';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { RenderHeader } from './header';
+
+dayjs.locale('id');
 
 export const TableByReceipt = ({ list, loading, filters, globalFilterValue, onGlobalFilterChange, dateFilter, setDateFilter }: TableInventoryProps) => {
     const router = useRouter();
@@ -42,7 +45,7 @@ export const TableByReceipt = ({ list, loading, filters, globalFilterValue, onGl
             <Column header="Tanggal" filterField="date" body={dateBodyTemplate} />
             <Column header="No Faktur" filterField="reference" body={referenceBodyTemplate} />
             <Column header="Supplier" field="supplier.name" />
-            <Column header="Total Modal" filterField="cost" body={costBodyTemplate} />
+            <Column header="Total Biaya" filterField="cost" body={costBodyTemplate} />
             <Column header="" body={editBodyTemplate} className="filter-action-button" />
         </DataTable>
     );

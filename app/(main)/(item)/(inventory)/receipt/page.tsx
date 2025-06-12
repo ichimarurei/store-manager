@@ -15,7 +15,16 @@ dayjs.extend(isBetween);
 
 const calculateSumCost = (products: any[]) => {
     let sumCost = 0;
-    products.forEach((item) => (sumCost += item?.cost || (item.product as any)?.cost || 0));
+
+    products.forEach((item) => {
+        let price = item?.cost || 0;
+
+        if (item?.discount > 0) {
+            price = price - (item?.discount / 100) * price;
+        }
+
+        sumCost += price;
+    });
 
     return sumCost;
 };
@@ -30,7 +39,7 @@ const processInvoiceItem = ({ date, author, supplier, reference, products, _id }
     return null;
 };
 
-const processProductItem = (item: any) => ({ ...item, cost: item.cost || (item.product as any)?.cost || 0, discount: item.discount || (item.product as any)?.discount || 0 });
+const processProductItem = (item: any) => ({ ...item, cost: item.cost || 0, discount: item.discount || 0 });
 
 const processProductData = (result: ReceiptDocument[]): any[] => {
     const product: any[] = [];

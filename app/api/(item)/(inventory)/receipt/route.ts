@@ -23,7 +23,7 @@ export async function GET(_: NextRequest) {
                     { path: 'bundle.contain.unit', select: '-__v' }
                 ]
             })
-            .populate({ path: 'products.unit', select: '-__v' })
+            .populate({ path: 'supplier', select: '-__v' })
             .populate({ path: 'author.created.by', select: '-__v' })
             .populate({ path: 'author.edited.by', select: '-__v' })
             .populate({ path: 'author.deleted.by', select: '-__v' })
