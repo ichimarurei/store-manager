@@ -5,6 +5,7 @@ import { createHash } from 'crypto';
 import { Toast } from 'primereact/toast';
 
 const getDefaultImage = (name: string) => `/storage/image/global/${name}.jpg`;
+const getUnitDetail = (item: any, unit: string) => (item?._id === unit ? item : null);
 
 export const doCancelAction = (path: string) => (window.location.href = `/${path}`);
 
@@ -14,9 +15,15 @@ export const getDefaultPhoto = () => getDefaultImage('photo');
 
 export const getDefaultProduct = () => getDefaultImage('product');
 
-export const formatRp = (value = 0) => {
+export const formatRp = (value = 0, discount = 0) => {
     try {
-        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(value).replace(',00', '').replace('Rp', 'Rp ');
+        let final = value;
+
+        if (discount > 0) {
+            final = value - (discount / 100) * value;
+        }
+
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(final).replace(',00', '').replace('Rp', 'Rp ');
     } catch (_) {
         return 'Rp 0';
     }
@@ -60,4 +67,14 @@ export const getAppInfo = async (): Promise<InfoDocument | null> => {
     } catch (_) {}
 
     return info;
+};
+
+export const pickUnitDetail = (item: any, unit: string) => {
+    let unitDetail = getUnitDetail(item.unit, unit);
+
+    if (!unitDetail) {
+        unitDetail = getUnitDetail(item?.bundle?.node?.unit, unit);
+    }
+
+    return unitDetail;
 };

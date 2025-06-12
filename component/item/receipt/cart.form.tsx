@@ -1,45 +1,47 @@
+import { formatRp, pickUnitDetail } from '@/lib/client.action';
 import '@/styles/_primereact.scss';
-import { Button } from 'primereact/button';
 import { OrderList } from 'primereact/orderlist';
+import ItemEditor from './item.edit.overlay';
 
-const getUnitName = (item: any, unit: string) => (item?._id === unit ? item?.name : null);
-
-const pickUnit = (item: any, unit: string) => {
-    let unitName = getUnitName(item.unit, unit);
-
-    if (!unitName) {
-        unitName = getUnitName(item?.bundle?.node?.unit, unit);
-    }
-
-    return unitName;
-};
-
-const CartForm = ({ selected, setSelected }: { selected: any[]; setSelected: (value: any[]) => void }) => {
-    return (
-        <div className="card">
-            <h5>Keranjang Barang Masuk</h5>
-            <p>Barang yang akan dimasukkan ke dalam faktur</p>
-            <OrderList
-                filter
-                dataKey="key"
-                value={selected}
-                onChange={(e) => setSelected(e.value)}
-                filterBy="label"
-                itemTemplate={(product: any) => (
-                    <div className="flex flex-wrap p-2 align-items-center gap-3">
-                        <div className="flex-1 flex flex-column gap-2">
-                            <span className="font-bold">{product.item.name}</span>
-                            <div className="flex align-items-center gap-2">
-                                <span className="font-bold text-900">{product?.qty || 0}</span>
-                                <span>{pickUnit(product.item, product.unit)}</span>
-                            </div>
-                        </div>
-                        <Button rounded outlined icon="pi pi-times" aria-label="Remove" severity="warning" onClick={() => setSelected(selected.filter(({ key }) => key !== product.key))} />
-                    </div>
-                )}
-            />
+const PriceList = ({ cost, discount = 0 }: { cost: number; discount?: number }) => (
+    <>
+        <div className="flex align-items-center gap-2">
+            <span className={`font-bold text-900${discount > 0 ? ' line-through' : ''}`}>{formatRp(cost || 0)}</span>
         </div>
-    );
-};
+        {discount > 0 && (
+            <div className="flex align-items-center gap-2">
+                <span className="font-bold text-900">{formatRp(cost || 0, discount)}</span>
+                <span>( {discount} % )</span>
+            </div>
+        )}
+    </>
+);
+
+const CartForm = ({ selected, setSelected }: { selected: any[]; setSelected: (value: any[]) => void }) => (
+    <div className="card">
+        <h5>Keranjang Barang Masuk</h5>
+        <p>
+            {selected.length > 0 && <mark>{selected.length}</mark>} {selected.length > 0 ? 'barang' : 'Barang'} yang akan dimasukkan ke dalam faktur
+        </p>
+        <OrderList
+            filter
+            dataKey="key"
+            value={selected}
+            onChange={(e) => setSelected(e.value)}
+            filterBy="label"
+            itemTemplate={(product: any) => (
+                <div className="flex flex-column flex-wrap gap-2 mb-5">
+                    <span className="font-bold">{product.item.name}</span>
+                    <div className="flex align-items-center gap-2">
+                        <span className="font-bold text-900">{product?.qty || 0}</span>
+                        <span>{pickUnitDetail(product.item, product.unit)?.name}</span>
+                    </div>
+                    <PriceList cost={product?.cost} discount={product?.discount} />
+                    <ItemEditor product={product} selected={selected} setSelected={setSelected} />
+                </div>
+            )}
+        />
+    </div>
+);
 
 export default CartForm;

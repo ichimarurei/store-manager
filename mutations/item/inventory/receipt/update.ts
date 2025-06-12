@@ -9,8 +9,8 @@ import { Types } from 'mongoose';
 dayjs.extend(dayjsUTC);
 
 const buildConditionalData = ({ reference, supplier, date }: { reference?: string; supplier?: Types.ObjectId; date?: Date }): Partial<ReceiptDocument> => ({
-    date: date || dayjs().utc().toDate(),
-    reference: reference || '',
+    ...(date && { date }),
+    ...(reference && { reference }),
     supplier: supplier || null
 });
 
