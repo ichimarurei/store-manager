@@ -1,11 +1,11 @@
 import handshakeDB from '@/lib/mongo';
-import { createDefaultResponse, createErrorResponse } from '@/lib/server.action';
+import { createErrorResponse } from '@/lib/server.action';
 import infoSchema, { InfoDocument } from '@/models/info.schema';
 import { update } from '@/mutations/info/update';
 import { NextRequest } from 'next/server';
 
 export async function GET(_: NextRequest) {
-    let response: Response = createDefaultResponse();
+    let response: Response;
 
     try {
         await handshakeDB();
@@ -19,7 +19,7 @@ export async function GET(_: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-    let response: Response = createDefaultResponse();
+    let response: Response;
 
     try {
         const params = await request.json();

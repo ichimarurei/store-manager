@@ -1,11 +1,11 @@
 import handshakeDB from '@/lib/mongo';
-import { createDefaultResponse, createErrorResponse } from '@/lib/server.action';
+import { createErrorResponse } from '@/lib/server.action';
 import receiptSchema, { ReceiptDocument } from '@/models/receipt.schema';
 import { create } from '@/mutations/item/inventory/receipt/create';
 import { NextRequest } from 'next/server';
 
 export async function GET(_: NextRequest) {
-    let response: Response = createDefaultResponse();
+    let response: Response;
 
     try {
         await handshakeDB();
@@ -37,7 +37,7 @@ export async function GET(_: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-    let response: Response = createDefaultResponse();
+    let response: Response;
 
     try {
         await handshakeDB();

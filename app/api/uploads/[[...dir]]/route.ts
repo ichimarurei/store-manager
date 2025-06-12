@@ -1,4 +1,4 @@
-import { createDefaultResponse, createErrorResponse, getUploadedPath } from '@/lib/server.action';
+import { createErrorResponse, getUploadedPath } from '@/lib/server.action';
 import { v2 as cloudinary } from 'cloudinary';
 import { createWriteStream } from 'fs';
 import { NextRequest } from 'next/server';
@@ -40,7 +40,7 @@ const uploadToLocal = async (file: File, dir?: string): Promise<string | null> =
 };
 
 export async function POST(request: NextRequest, { params }: { params: Promise<{ dir?: string[] }> }) {
-    let response: Response = createDefaultResponse();
+    let response: Response;
 
     try {
         const { dir } = await params;

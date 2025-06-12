@@ -1,10 +1,10 @@
 import handshakeDB from '@/lib/mongo';
-import { createDefaultResponse, createErrorResponse } from '@/lib/server.action';
+import { createErrorResponse } from '@/lib/server.action';
 import productSchema, { ProductDocument } from '@/models/product.schema';
 import { NextRequest } from 'next/server';
 
 export async function GET(_: NextRequest) {
-    let response: Response = createDefaultResponse();
+    let response: Response;
 
     try {
         await handshakeDB();
