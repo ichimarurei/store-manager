@@ -6422,8 +6422,8 @@
   }
 
   .p-cascadeselect .p-cascadeselect-label, .p-cascadeselect .p-dropdown-trigger {
-    background-image: none;
     background: transparent;
+    background-image: none;
   }
   .p-cascadeselect .p-cascadeselect-label {
     border: 0 none;
@@ -6447,8 +6447,8 @@
     background-origin: border-box;
   }
   .p-input-filled .p-cascadeselect .p-inputtext {
-    background-image: none;
     background: transparent;
+    background-image: none;
   }
   .p-input-filled .p-cascadeselect:not(.p-disabled):hover {
     background-color: rgba(255, 255, 255, 0.08);
@@ -6462,12 +6462,12 @@
     background-size: 100% 2px, 100% 1px;
   }
   .p-input-filled .p-cascadeselect .p-inputtext:enabled:hover, .p-input-filled .p-cascadeselect .p-inputtext:enabled:focus {
-    background-image: none;
     background: transparent;
+    background-image: none;
   }
   .p-input-filled .p-cascadeselect .p-cascadeselect-label:hover {
-    background-image: none;
     background: transparent;
+    background-image: none;
   }
   .p-input-filled .p-float-label .p-cascadeselect .p-cascadeselect-label {
     padding-top: 1.5rem;
@@ -6576,8 +6576,8 @@
     background-origin: border-box;
   }
   .p-input-filled .p-chips-multiple-container .p-inputtext {
-    background-image: none;
     background: transparent;
+    background-image: none;
   }
   .p-input-filled .p-chips-multiple-container:not(.p-disabled):hover {
     background-color: rgba(255, 255, 255, 0.08);
@@ -6591,8 +6591,8 @@
     background-size: 100% 2px, 100% 1px;
   }
   .p-input-filled .p-chips-multiple-container .p-inputtext:enabled:hover, .p-input-filled .p-chips-multiple-container .p-inputtext:enabled:focus {
-    background-image: none;
     background: transparent;
+    background-image: none;
   }
 
   .p-float-label .p-chips-multiple-container .p-chips-token {
