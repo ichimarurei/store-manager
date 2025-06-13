@@ -110,7 +110,9 @@ const ReceiptList = () => {
                 const response = await fetch('/api/receipt', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
                 const result: ReceiptDocument[] = await response.json();
                 setList(processReceiptData(result, dateFilter));
-            } catch (_) {}
+            } catch (_) {
+                console.error(_);
+            }
 
             setLoading(false);
             initFilters();

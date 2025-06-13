@@ -10,9 +10,9 @@ import { v4 as uuid } from 'uuid';
 dayjs.extend(dayjsUTC);
 
 const buildConditionalData = ({ reference, supplier, date }: { reference?: string; supplier?: Types.ObjectId; date?: Date }): Partial<ReceiptDocument> => ({
-    date: date || dayjs().utc().toDate(),
-    reference: reference || uuid().replaceAll('-', '').toUpperCase(),
-    supplier: supplier || null
+    date: date ?? dayjs().utc().toDate(),
+    reference: reference ?? uuid().replaceAll('-', '').toUpperCase(),
+    supplier: supplier ?? null
 });
 
 const buildCreateData = async (params: any): Promise<Partial<ReceiptDocument>> => {
@@ -34,7 +34,9 @@ export const create = async (params: any): Promise<ReceiptDocument | null> => {
             const payload = await buildCreateData(params);
             saved = await receiptSchema.create(payload);
         }
-    } catch (_) {}
+    } catch (_) {
+        console.error(_);
+    }
 
     return saved;
 };

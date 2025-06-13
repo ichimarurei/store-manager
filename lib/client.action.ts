@@ -64,7 +64,9 @@ export const getAppInfo = async (): Promise<InfoDocument | null> => {
     try {
         const response = await fetch('/api/info', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
         info = await response.json();
-    } catch (_) {}
+    } catch (_) {
+        console.error(_);
+    }
 
     return info;
 };

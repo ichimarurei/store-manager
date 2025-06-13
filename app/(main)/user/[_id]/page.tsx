@@ -35,7 +35,9 @@ const doSubmit = async (record: any, _id?: string) => {
             });
             const result = await response.json();
             saved = result?.saved || false;
-        } catch (_) {}
+        } catch (_) {
+            console.error(_);
+        }
     } else {
         notices = validated.issues.map(({ message }) => message);
     }

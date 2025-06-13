@@ -8,9 +8,11 @@ export const create = async (params: any): Promise<UnitDocument | null> => {
     try {
         if (!isEmpty(params?.name)) {
             await handshakeDB();
-            saved = await unitSchema.create({ name: params.name, short: params?.short || '' });
+            saved = await unitSchema.create({ name: params.name, short: params?.short ?? '' });
         }
-    } catch (_) {}
+    } catch (_) {
+        console.error(_);
+    }
 
     return saved;
 };

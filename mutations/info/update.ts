@@ -6,14 +6,14 @@ import { isEmpty } from 'lodash';
 const isValidParams = (params: any): boolean => !isEmpty(params?._id) && !isEmpty(params?.name);
 
 const buildConditionalData = ({ logo, about, debtConfigFrom }: { logo?: string; about?: any; debtConfigFrom?: any }): Partial<InfoDocument> => ({
-    logo: logo || getDefaultLogo(),
-    about: about || { line1: '', line2: '' },
-    debtConfigFrom: debtConfigFrom || { customer: 0, supplier: 0 }
+    logo: logo ?? getDefaultLogo(),
+    about: about ?? { line1: '', line2: '' },
+    debtConfigFrom: debtConfigFrom ?? { customer: 0, supplier: 0 }
 });
 
 const buildUpdateData = (params: any): Partial<InfoDocument> => ({
     name: params.name,
-    address: params?.address || '',
+    address: params?.address ?? '',
     ...buildConditionalData({ logo: params?.logo, about: params?.about, debtConfigFrom: params?.debtConfigFrom })
 });
 
@@ -25,7 +25,9 @@ export const update = async (params: any): Promise<InfoDocument | null> => {
             await handshakeDB();
             saved = await infoSchema.findOneAndUpdate({ _id: params._id }, buildUpdateData(params), { new: true, lean: true }).lean<InfoDocument>();
         }
-    } catch (_) {}
+    } catch (_) {
+        console.error(_);
+    }
 
     return saved;
 };

@@ -4,8 +4,8 @@ import { isEmpty } from 'lodash';
 
 const buildUpdateData = (params: any): Partial<SupplierDocument> => ({
     name: params.name,
-    phone: params?.phone || '',
-    address: params?.address || ''
+    phone: params?.phone ?? '',
+    address: params?.address ?? ''
 });
 
 export const update = async (params: any): Promise<SupplierDocument | null> => {
@@ -16,7 +16,9 @@ export const update = async (params: any): Promise<SupplierDocument | null> => {
             await handshakeDB();
             saved = await supplierSchema.findOneAndUpdate({ _id: params._id }, buildUpdateData(params), { new: true, lean: true }).lean<SupplierDocument>();
         }
-    } catch (_) {}
+    } catch (_) {
+        console.error(_);
+    }
 
     return saved;
 };

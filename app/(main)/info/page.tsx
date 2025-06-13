@@ -34,7 +34,9 @@ const doSubmit = async (record: any) => {
             });
             const result = await response.json();
             saved = result?.saved || false;
-        } catch (_) {}
+        } catch (_) {
+            console.error(_);
+        }
     } else {
         notices = validated.issues.map(({ message }) => message);
     }
@@ -65,7 +67,9 @@ const InfoPage = () => {
                 const response = await fetch('/api/info', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
                 setRecord(await response.json());
                 setLoading(false);
-            } catch (_) {}
+            } catch (_) {
+                console.error(_);
+            }
         };
 
         setLoading(true);

@@ -53,7 +53,9 @@ const doSubmit = async (record: any, _id?: string) => {
             });
             const result = await response.json();
             saved = result?.saved || false;
-        } catch (_) {}
+        } catch (_) {
+            console.error(_);
+        }
     } else {
         notices = validated.issues.map(({ message }) => message);
     }
@@ -68,7 +70,9 @@ const fetchProducts = async (): Promise<any[]> => {
         const response = await fetch('/api/product', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
         const list = await response.json();
         products.push(...list);
-    } catch (_) {}
+    } catch (_) {
+        console.error(_);
+    }
 
     return products;
 };

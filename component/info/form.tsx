@@ -66,7 +66,9 @@ const InfoForm = ({ toast, record, doSubmit }: { toast: Toast | null; record: In
                 detail = 'Logo berhasil diunggah';
                 setLogo(image);
             }
-        } catch (_) {}
+        } catch (_) {
+        console.error(_);
+    }
 
         toast?.show({ severity, summary, detail, life: 3000 });
     };

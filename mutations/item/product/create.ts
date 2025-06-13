@@ -7,8 +7,8 @@ import { isEmpty } from 'lodash';
 const isValidParams = (params: any): boolean => !isEmpty(params?.name) && !isEmpty(params?.category) && !isEmpty(params?.unit) && !isEmpty(params?.operator);
 
 const buildConditionalData = ({ bundle, images }: { bundle?: IBundling; images?: string[] }): Partial<ProductDocument> => ({
-    bundle: bundle || null,
-    images: images || []
+    bundle: bundle ?? null,
+    images: images ?? []
 });
 
 const buildCreateData = async (params: any): Promise<Partial<ProductDocument>> => {
@@ -32,7 +32,9 @@ export const create = async (params: any): Promise<ProductDocument | null> => {
             const payload = await buildCreateData(params);
             saved = await productSchema.create(payload);
         }
-    } catch (_) {}
+    } catch (_) {
+        console.error(_);
+    }
 
     return saved;
 };

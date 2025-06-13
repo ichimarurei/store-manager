@@ -11,7 +11,7 @@ dayjs.extend(dayjsUTC);
 const buildConditionalData = ({ reference, supplier, date }: { reference?: string; supplier?: Types.ObjectId; date?: Date }): Partial<ReceiptDocument> => ({
     ...(date && { date }),
     ...(reference && { reference }),
-    supplier: supplier || null
+    supplier: supplier ?? null
 });
 
 const buildUpdateData = async (params: any): Promise<Partial<ReceiptDocument>> => {
@@ -33,7 +33,9 @@ export const update = async (params: any): Promise<ReceiptDocument | null> => {
             const payload = await buildUpdateData(params);
             saved = await receiptSchema.findOneAndUpdate({ _id: params._id }, payload, { new: true, lean: true }).lean<ReceiptDocument>();
         }
-    } catch (_) {}
+    } catch (_) {
+        console.error(_);
+    }
 
     return saved;
 };
