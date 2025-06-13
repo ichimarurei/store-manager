@@ -17,20 +17,20 @@ export const TableByItem = ({ list, loading, filters, globalFilterValue, onGloba
 
     const nameBodyTemplate = ({ product, parent }: any) => (
         <Link href={`/receipt/${parent}`} style={{ display: 'flex', alignItems: 'center' }}>
-            <Image alt="product image" src={product?.images?.at(0) || getDefaultProduct()} width="32" height="32" style={{ verticalAlign: 'middle' }} imageStyle={{ borderRadius: '50%', objectFit: 'cover' }} />
+            <Image alt="product image" src={product?.images?.at(0) ?? getDefaultProduct()} width="32" height="32" style={{ verticalAlign: 'middle' }} imageStyle={{ borderRadius: '50%', objectFit: 'cover' }} />
             <span style={{ marginLeft: '.5em', verticalAlign: 'middle' }}>{product.name}</span>
         </Link>
     );
     const editBodyTemplate = ({ product, parent }: any) => <Button icon="pi pi-pencil" outlined onClick={() => router.push(`/receipt/${parent}`)} />;
-    const qtyBodyTemplate = ({ qty, unit }: any) => `${Intl.NumberFormat('id-ID', { style: 'decimal' }).format(qty)} ${unit?.name || ''}`;
-    const discountBodyTemplate = ({ discount }: any) => `${discount ? `${discount} %` : ''}`;
+    const qtyBodyTemplate = ({ qty, unit }: any) => `${Intl.NumberFormat('id-ID', { style: 'decimal' }).format(qty)} ${unit?.name ?? ''}`;
+    const discountBodyTemplate = ({ discount }: any) => `${discount ? discount + ' %' : ''}`;
     const costBodyTemplate = ({ cost }: any) => formatRp(cost);
     const dateBodyTemplate = ({ date }: any) => dayjs(date).format('DD MMMM YYYY');
 
     return (
         <DataTable
             className="p-datatable-gridlines"
-            header={() => <RenderHeader modePreview="produk" globalFilterValue={globalFilterValue} onGlobalFilterChange={onGlobalFilterChange} dateFilter={dateFilter} setDateFilter={setDateFilter} />}
+            header={<RenderHeader modePreview="produk" globalFilterValue={globalFilterValue} onGlobalFilterChange={onGlobalFilterChange} dateFilter={dateFilter} setDateFilter={setDateFilter} />}
             loading={loading}
             filters={filters}
             value={list}

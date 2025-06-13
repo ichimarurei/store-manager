@@ -6,11 +6,11 @@ import ItemEditor from './item.edit.overlay';
 const PriceList = ({ cost, discount = 0 }: { cost: number; discount?: number }) => (
     <>
         <div className="flex align-items-center gap-2">
-            <span className={`font-bold text-900${discount > 0 ? ' line-through' : ''}`}>{formatRp(cost || 0)}</span>
+            <span className={`font-bold text-900${discount > 0 ? ' line-through' : ''}`}>{formatRp(cost ?? 0)}</span>
         </div>
         {discount > 0 && (
             <div className="flex align-items-center gap-2">
-                <span className="font-bold text-900">{formatRp(cost || 0, discount)}</span>
+                <span className="font-bold text-900">{formatRp(cost ?? 0, discount)}</span>
                 <span>( {discount} % )</span>
             </div>
         )}
@@ -33,7 +33,7 @@ const CartForm = ({ selected, setSelected }: { selected: any[]; setSelected: (va
                 <div className="flex flex-column flex-wrap gap-2 mb-5">
                     <span className="font-bold">{product.item.name}</span>
                     <div className="flex align-items-center gap-2">
-                        <span className="font-bold text-900">{product?.qty || 0}</span>
+                        <span className="font-bold text-900">{product?.qty ?? 0}</span>
                         <span>{pickUnitDetail(product.item, product.unit)?.name}</span>
                     </div>
                     <PriceList cost={product?.cost} discount={product?.discount} />

@@ -34,13 +34,13 @@ const UnitList = () => {
 
         if (validated.success) {
             try {
-                const response = await fetch(`/api/unit${_id ? `/${_id}` : ''}`, {
+                const response = await fetch(_id ? `/api/unit/${_id}` : '/api/unit', {
                     method: !_id ? 'POST' : 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(record)
                 });
                 const result = await response.json();
-                saved = result?.saved || false;
+                saved = result?.saved ?? false;
             } catch (_) {
                 console.error(_);
             }

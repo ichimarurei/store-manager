@@ -45,20 +45,20 @@ const ProductForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; m
     const setLogInfo = (author?: any | null) => setLogs(createLogs(author));
 
     const setBasicInfo = (record: ProductDocument) => {
-        const pictures = record?.images || [];
+        const pictures = record?.images ?? [];
 
         if (!pictures.length) {
             pictures.push(getDefaultProduct());
         }
 
-        setName(record.name || '');
+        setName(record.name ?? '');
         setImages(pictures);
     };
 
     const setReferenceInfo = (record: ProductDocument) => {
         setCategory(record.category?._id);
         setUnit(record.unit?._id);
-        setAuthor(record?.author || null);
+        setAuthor(record?.author ?? null);
         setLogInfo(record?.author);
     };
 
@@ -72,9 +72,9 @@ const ProductForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; m
                 : null
         );
 
-    const payloadOptionals = () => ({ category: category || categories[0]?.code, unit: unit || units[0]?.code });
+    const payloadOptionals = () => ({ category: category ?? categories[0]?.code, unit: unit ?? units[0]?.code });
 
-    const payloadBundle = () => ({ bundle: (bundle?.contain?.amount || 0) >= 1 ? bundle : null });
+    const payloadBundle = () => ({ bundle: (bundle?.contain?.amount ?? 0) >= 1 ? bundle : null });
 
     const generatePayload = () => ({
         name,
@@ -88,7 +88,7 @@ const ProductForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; m
     const submitAction = async () => {
         if (!loading) {
             setLoading(true);
-            const { saved, notices } = await doSubmit(generatePayload(), `${record?._id || ''}`);
+            const { saved, notices } = await doSubmit(generatePayload(), `${record?._id ?? ''}`);
 
             if (!saved) {
                 setLoading(false);
@@ -125,8 +125,8 @@ const ProductForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; m
                     setUnits(result.map(({ _id, name }) => ({ name, code: _id })));
                 }
             } catch (_) {
-        console.error(_);
-    }
+                console.error(_);
+            }
         };
 
         fetching('category');
@@ -163,13 +163,13 @@ const ProductForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; m
                     <label htmlFor="category">
                         Kategori Produk <sup className="text-red-500">*</sup>
                     </label>
-                    <Dropdown id="category" optionLabel="name" value={categories.find(({ code }) => code === category) || categories[0]} options={categories} onChange={(e) => setCategory(e.value?.code)} />
+                    <Dropdown id="category" optionLabel="name" value={categories.find(({ code }) => code === category) ?? categories[0]} options={categories} onChange={(e) => setCategory(e.value?.code)} />
                 </div>
                 <div className="field col-12 md:col-5 gap-field">
                     <label htmlFor="unit">
                         Satuan Produk <sup className="text-red-500">*</sup>
                     </label>
-                    <Dropdown id="unit" optionLabel="name" value={units.find(({ code }) => code === unit) || units[0]} options={units} onChange={(e) => setUnit(e.value?.code)} />
+                    <Dropdown id="unit" optionLabel="name" value={units.find(({ code }) => code === unit) ?? units[0]} options={units} onChange={(e) => setUnit(e.value?.code)} />
                 </div>
                 <FormOverlay units={units} unit={unit} setBundle={setBundle} {...(bundle && { bundle })} />
             </div>

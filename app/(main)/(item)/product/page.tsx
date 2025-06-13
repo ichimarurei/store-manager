@@ -21,7 +21,7 @@ const ProductList = () => {
 
     const nameBodyTemplate = (rowData: ProductDocument) => (
         <Link href={`/product/${rowData._id}`} style={{ display: 'flex', alignItems: 'center' }}>
-            <Image alt="product image" src={rowData?.images?.at(0) || getDefaultProduct()} width="32" height="32" style={{ verticalAlign: 'middle' }} imageStyle={{ borderRadius: '50%', objectFit: 'cover' }} />
+            <Image alt="product image" src={rowData?.images?.at(0) ?? getDefaultProduct()} width="32" height="32" style={{ verticalAlign: 'middle' }} imageStyle={{ borderRadius: '50%', objectFit: 'cover' }} />
             <span style={{ marginLeft: '.5em', verticalAlign: 'middle' }}>{rowData.name}</span>
         </Link>
     );

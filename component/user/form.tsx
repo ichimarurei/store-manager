@@ -40,7 +40,7 @@ const UserForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; mode
         setUsername(record.username);
         setPassword(record.password);
         setActive(record?.active ?? false);
-        setPrivilege(privileges.find(({ code }) => code === record?.privilege) || privileges[0]);
+        setPrivilege(privileges.find(({ code }) => code === record?.privilege) ?? privileges[0]);
     };
 
     useEffect(() => {

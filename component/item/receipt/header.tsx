@@ -26,7 +26,7 @@ export const RenderHeader = ({
                     <i className="pi pi-search" />
                     <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Pencarian" />
                 </span>
-                <Calendar showIcon showButtonBar readOnlyInput hideOnDateTimeSelect placeholder="Filter tanggal" dateFormat="dd/mm/yy" selectionMode="range" value={dateFilter} onChange={({ value }) => setDateFilter(value || null)} />
+                <Calendar showIcon showButtonBar readOnlyInput hideOnDateTimeSelect placeholder="Filter tanggal" dateFormat="dd/mm/yy" selectionMode="range" value={dateFilter} onChange={({ value }) => setDateFilter(value ?? null)} />
             </div>
         </div>
     );

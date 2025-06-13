@@ -33,7 +33,7 @@ const doSubmit = async (record: any) => {
                 body: JSON.stringify(record)
             });
             const result = await response.json();
-            saved = result?.saved || false;
+            saved = result?.saved ?? false;
         } catch (_) {
             console.error(_);
         }
