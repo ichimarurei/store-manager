@@ -12,4 +12,4 @@ export interface SupplierDocument extends Document {
     address?: string;
 }
 
-export default mongoose.models.Supplier || mongoose.model<SupplierDocument>('Supplier', Supplier);
+export default mongoose.models.Supplier ?? mongoose.model<SupplierDocument>('Supplier', Supplier);

@@ -42,4 +42,4 @@ export interface InfoDocument extends Document {
     debtConfigFrom?: IDebtConfig;
 }
 
-export default mongoose.models.Info || mongoose.model<InfoDocument>('Info', Info);
+export default mongoose.models.Info ?? mongoose.model<InfoDocument>('Info', Info);

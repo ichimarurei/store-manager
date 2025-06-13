@@ -83,4 +83,4 @@ export interface SalesDocument extends Document {
     author: IAuthor;
 }
 
-export default mongoose.models.Sales || mongoose.model<SalesDocument>('Sales', Sales);
+export default mongoose.models.Sales ?? mongoose.model<SalesDocument>('Sales', Sales);

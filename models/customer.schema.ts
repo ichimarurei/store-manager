@@ -14,4 +14,4 @@ export interface CustomerDocument extends Document {
     city?: string;
 }
 
-export default mongoose.models.Customer || mongoose.model<CustomerDocument>('Customer', Customer);
+export default mongoose.models.Customer ?? mongoose.model<CustomerDocument>('Customer', Customer);

@@ -39,4 +39,4 @@ export interface ReceiptDocument extends Document {
     author: IAuthor;
 }
 
-export default mongoose.models.Receipt || mongoose.model<ReceiptDocument>('Receipt', Receipt);
+export default mongoose.models.Receipt ?? mongoose.model<ReceiptDocument>('Receipt', Receipt);
