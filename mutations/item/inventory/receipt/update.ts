@@ -1,6 +1,7 @@
 import handshakeDB from '@/lib/mongo';
 import receiptSchema, { ReceiptDocument } from '@/models/receipt.schema';
 import { buildAuthorPayload } from '@/mutations/global/function';
+import { syncStockByIds } from '@/mutations/item/inventory/stock/sync';
 import dayjs from 'dayjs';
 import dayjsUTC from 'dayjs/plugin/utc';
 import { isEmpty } from 'lodash';
@@ -35,6 +36,10 @@ export const update = async (params: any): Promise<ReceiptDocument | null> => {
         }
     } catch (_) {
         console.error(_);
+    }
+
+    if (saved) {
+        await syncStockByIds(params.products.map(({ product }: any) => String(product)));
     }
 
     return saved;

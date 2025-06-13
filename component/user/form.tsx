@@ -73,6 +73,7 @@ const UserForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; mode
 
     const submitAction = async () => {
         if (!loading) {
+            toast?.show({ severity: 'info', summary: 'Menyimpan', detail: 'Memproses penyimpanan data akun ...' });
             setLoading(true);
             const { saved, notices } = await doSubmit(
                 {
@@ -174,7 +175,7 @@ const UserForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; mode
             </div>
             <div className="flex justify-content-between flex-wrap">
                 <Button label="Batal" icon="pi pi-times" severity="info" onClick={() => doCancelAction('user')} />
-                <Button label="Simpan" icon="pi pi-check" className="form-action-button" onClick={async () => await submitAction()} />
+                <Button label="Simpan" icon="pi pi-check" className="form-action-button" disabled={loading} onClick={async () => await submitAction()} />
             </div>
         </div>
     );

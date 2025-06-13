@@ -1,6 +1,6 @@
 'use server';
 
-import { syncStock } from '@/queries/stock/sync';
+import { syncStock } from '@/mutations/item/inventory/stock/sync';
 import { existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
 

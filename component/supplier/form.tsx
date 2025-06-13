@@ -29,6 +29,7 @@ const SupplierForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; 
 
     const submitAction = async () => {
         if (!loading) {
+            toast?.show({ severity: 'info', summary: 'Menyimpan', detail: 'Memproses penyimpanan data supplier ...' });
             setLoading(true);
             await doAction();
         }
@@ -65,7 +66,7 @@ const SupplierForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; 
             </div>
             <div className="flex justify-content-between flex-wrap">
                 <Button label="Batal" icon="pi pi-times" severity="info" onClick={() => doCancelAction('supplier')} />
-                <Button label="Simpan" icon="pi pi-check" className="form-action-button" onClick={async () => await submitAction()} />
+                <Button label="Simpan" icon="pi pi-check" className="form-action-button" disabled={loading} onClick={async () => await submitAction()} />
             </div>
         </div>
     );

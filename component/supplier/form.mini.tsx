@@ -10,8 +10,11 @@ const SupplierMiniForm = ({ toast, doSubmit, setVisible, reload }: { toast: Toas
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleSubmitResponse = async (submitted: SubmitResponse) => {
+        setLoading(false);
+
         if (submitted.saved) {
             await reload();
             toaster(toast, [{ severity: 'success', summary: 'Berhasil simpan', detail: 'Data berhasil disimpan di Sistem' }]);
@@ -22,8 +25,12 @@ const SupplierMiniForm = ({ toast, doSubmit, setVisible, reload }: { toast: Toas
     };
 
     const doAction = async () => {
-        const response = await doSubmit({ name, phone, address });
-        handleSubmitResponse(response);
+        if (!loading) {
+            setLoading(true);
+            toast?.show({ severity: 'info', summary: 'Menyimpan', detail: 'Memproses penyimpanan data supplier ...' });
+            const response = await doSubmit({ name, phone, address });
+            handleSubmitResponse(response);
+        }
     };
 
     return (
@@ -44,7 +51,7 @@ const SupplierMiniForm = ({ toast, doSubmit, setVisible, reload }: { toast: Toas
                     <InputTextarea id="address" rows={4} value={address} onChange={({ target }) => setAddress(target.value)} autoResize />
                 </div>
             </div>
-            <Button label="Simpan" icon="pi pi-check" className="form-action-button" onClick={async () => await doAction()} />
+            <Button label="Simpan" icon="pi pi-check" className="form-action-button" disabled={loading} onClick={async () => await doAction()} />
         </div>
     );
 };

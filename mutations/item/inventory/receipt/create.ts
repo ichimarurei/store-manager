@@ -1,6 +1,7 @@
 import handshakeDB from '@/lib/mongo';
 import receiptSchema, { ReceiptDocument } from '@/models/receipt.schema';
 import { buildAuthorPayload } from '@/mutations/global/function';
+import { syncStockByIds } from '@/mutations/item/inventory/stock/sync';
 import dayjs from 'dayjs';
 import dayjsUTC from 'dayjs/plugin/utc';
 import { isEmpty } from 'lodash';
@@ -11,7 +12,7 @@ dayjs.extend(dayjsUTC);
 
 const buildConditionalData = ({ reference, supplier, date }: { reference?: string; supplier?: Types.ObjectId; date?: Date }): Partial<ReceiptDocument> => ({
     date: date ?? dayjs().utc().toDate(),
-    reference: reference ?? uuid().replaceAll('-', '').toUpperCase(),
+    reference: !isEmpty(reference) ? reference : uuid().replaceAll('-', '').toUpperCase(),
     supplier: supplier ?? null
 });
 
@@ -36,6 +37,10 @@ export const create = async (params: any): Promise<ReceiptDocument | null> => {
         }
     } catch (_) {
         console.error(_);
+    }
+
+    if (saved) {
+        await syncStockByIds(params.products.map(({ product }: any) => String(product)));
     }
 
     return saved;
