@@ -1,4 +1,4 @@
-import { toaster } from '@/lib/client.action';
+import { handleFailedSave, toaster } from '@/lib/client.action';
 import { SubmitResponse } from '@/types/app';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
@@ -11,20 +11,13 @@ const SupplierMiniForm = ({ toast, doSubmit, setVisible, reload }: { toast: Toas
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
 
-    const handleSubmitResponse = async ({ saved, notices }: SubmitResponse) => {
-        if (!saved) {
-            if (notices.length > 0) {
-                toaster(
-                    toast,
-                    notices.map((detail) => ({ severity: 'warn', summary: 'Validasi gagal!', detail }))
-                );
-            } else {
-                toaster(toast, [{ severity: 'warn', summary: 'Gagal simpan!', detail: 'Data tidak dapat disimpan oleh Sistem' }]);
-            }
-        } else {
+    const handleSubmitResponse = async (submitted: SubmitResponse) => {
+        if (submitted.saved) {
             await reload();
             toaster(toast, [{ severity: 'success', summary: 'Berhasil simpan', detail: 'Data berhasil disimpan di Sistem' }]);
             setVisible(false);
+        } else {
+            handleFailedSave(toast, submitted.notices);
         }
     };
 
