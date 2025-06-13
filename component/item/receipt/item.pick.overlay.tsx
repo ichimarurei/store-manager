@@ -14,7 +14,7 @@ const Navigator = ({ mode, item, onClicking }: { mode: 'button' | 'link'; item?:
         <Button icon="pi pi-plus" outlined onClick={onClicking} />
     ) : (
         mode === 'link' && (
-            <Link href="javascript:void(0)" style={{ display: 'flex', alignItems: 'center' }} onClick={onClicking}>
+            <Link href="#" style={{ display: 'flex', alignItems: 'center' }} onClick={onClicking}>
                 <Image alt="product image" src={item?.images?.at(0) ?? getDefaultProduct()} width="32" height="32" style={{ verticalAlign: 'middle' }} imageStyle={{ borderRadius: '50%', objectFit: 'cover' }} />
                 <span style={{ marginLeft: '.5em', verticalAlign: 'middle' }}>{item?.name}</span>
             </Link>
