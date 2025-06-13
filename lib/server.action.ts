@@ -16,7 +16,7 @@ export const getUploadedPath = (filename: string, dir = 'global') => {
 
 export const createErrorResponse = (error?: any): Response => Response.json({ error: error instanceof Error ? error.message : 'Server error', saved: false }, { status: 500 });
 
-export const createDefaultResponse = (error?: string): Response => Response.json({ error: error || 'Unprocessable operation!' }, { status: 422 });
+export const createDefaultResponse = (error?: string): Response => Response.json({ error: error ?? 'Unprocessable operation!' }, { status: 422 });
 
 export const doSyncStock = async () => {
     let fetched = null;

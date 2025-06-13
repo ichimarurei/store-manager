@@ -25,6 +25,8 @@ export const formatRp = (value = 0, discount = 0) => {
 
         return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(final).replace(',00', '').replace('Rp', 'Rp ');
     } catch (_) {
+        console.error(_);
+
         return 'Rp 0';
     }
 };
@@ -49,7 +51,7 @@ export const provideValidPassword = (password?: string): string => {
         }
     }
 
-    return hashed || '';
+    return hashed ?? '';
 };
 
 export const isRestricted = (session?: any) => {
@@ -73,10 +75,18 @@ export const getAppInfo = async (): Promise<InfoDocument | null> => {
 
 export const pickUnitDetail = (item: any, unit: string) => {
     let unitDetail = getUnitDetail(item.unit, unit);
-
-    if (!unitDetail) {
-        unitDetail = getUnitDetail(item?.bundle?.node?.unit, unit);
-    }
+    unitDetail ??= getUnitDetail(item?.bundle?.node?.unit, unit);
 
     return unitDetail;
+};
+
+export const handleFailedSave = (toast: Toast | null, notices: string[]) => {
+    if (notices.length > 0) {
+        toaster(
+            toast,
+            notices.map((detail) => ({ severity: 'warn', summary: 'Validasi gagal!', detail }))
+        );
+    } else {
+        toaster(toast, [{ severity: 'warn', summary: 'Gagal simpan!', detail: 'Data tidak dapat disimpan oleh Sistem' }]);
+    }
 };

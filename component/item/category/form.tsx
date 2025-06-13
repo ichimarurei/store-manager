@@ -1,4 +1,4 @@
-import { toaster } from '@/lib/client.action';
+import { handleFailedSave, toaster } from '@/lib/client.action';
 import { CategoryDocument } from '@/models/category.schema';
 import { SubmitResponse } from '@/types/app';
 import { Button } from 'primereact/button';
@@ -22,26 +22,18 @@ const CategoryForm = ({
     const [name, setName] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const handleSubmitResponse = ({ saved, notices }: SubmitResponse) => {
-        if (!saved) {
-            setLoading(false);
-
-            if (notices.length > 0) {
-                toaster(
-                    toast,
-                    notices.map((detail) => ({ severity: 'warn', summary: 'Validasi gagal!', detail }))
-                );
-            } else {
-                toaster(toast, [{ severity: 'warn', summary: 'Gagal simpan!', detail: 'Data tidak dapat disimpan oleh Sistem' }]);
-            }
-        } else {
+    const handleSubmitResponse = (submitted: SubmitResponse) => {
+        if (submitted.saved) {
             toaster(toast, [{ severity: 'success', summary: 'Berhasil simpan', detail: 'Data berhasil disimpan di Sistem' }]);
             setVisible(false);
+        } else {
+            setLoading(false);
+            handleFailedSave(toast, submitted.notices);
         }
     };
 
     const doAction = async () => {
-        const response = await doSubmit({ name, ...(mode === 'edit' && { _id: record?._id }) }, `${record?._id || ''}`);
+        const response = await doSubmit({ name, ...(mode === 'edit' && { _id: record?._id }) }, `${record?._id ?? ''}`);
         handleSubmitResponse(response);
     };
 
@@ -54,7 +46,7 @@ const CategoryForm = ({
 
     useEffect(() => {
         if (record) {
-            setName(record.name || '');
+            setName(record.name ?? '');
         }
     }, [record]);
 

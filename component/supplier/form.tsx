@@ -1,4 +1,4 @@
-import { doCancelAction, toaster } from '@/lib/client.action';
+import { doCancelAction, handleFailedSave, toaster } from '@/lib/client.action';
 import { SupplierDocument } from '@/models/supplier.schema';
 import { SubmitResponse } from '@/types/app';
 import { Button } from 'primereact/button';
@@ -13,25 +13,17 @@ const SupplierForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; 
     const [address, setAddress] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const handleSubmitResponse = ({ saved, notices }: SubmitResponse) => {
-        if (!saved) {
-            setLoading(false);
-
-            if (notices.length > 0) {
-                toaster(
-                    toast,
-                    notices.map((detail) => ({ severity: 'warn', summary: 'Validasi gagal!', detail }))
-                );
-            } else {
-                toaster(toast, [{ severity: 'warn', summary: 'Gagal simpan!', detail: 'Data tidak dapat disimpan oleh Sistem' }]);
-            }
-        } else {
+    const handleSubmitResponse = (submitted: SubmitResponse) => {
+        if (submitted.saved) {
             toaster(toast, [{ severity: 'success', summary: 'Berhasil simpan', detail: 'Data berhasil disimpan di Sistem' }], 'supplier');
+        } else {
+            setLoading(false);
+            handleFailedSave(toast, submitted.notices);
         }
     };
 
     const doAction = async () => {
-        const response = await doSubmit({ name, phone, address, ...(mode === 'edit' && { _id: record?._id }) }, `${record?._id || ''}`);
+        const response = await doSubmit({ name, phone, address, ...(mode === 'edit' && { _id: record?._id }) }, `${record?._id ?? ''}`);
         handleSubmitResponse(response);
     };
 
@@ -44,9 +36,9 @@ const SupplierForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; 
 
     useEffect(() => {
         if (record) {
-            setName(record.name || '');
-            setAddress(record?.address || '');
-            setPhone(record?.phone || '');
+            setName(record.name ?? '');
+            setAddress(record?.address ?? '');
+            setPhone(record?.phone ?? '');
         }
     }, [record]);
 
