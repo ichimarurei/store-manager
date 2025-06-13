@@ -17,7 +17,7 @@ const calculateSumCost = (products: any[]) => {
     let sumCost = 0;
 
     products.forEach((item) => {
-        let price = item?.cost || 0;
+        let price = item?.cost ?? 0;
 
         if (item?.discount > 0) {
             price = price - (item?.discount / 100) * price;
@@ -33,13 +33,13 @@ const processInvoiceItem = ({ date, author, supplier, reference, products, _id }
     const datetime = date || author.created?.time || null;
 
     if (datetime) {
-        return { _id, supplier, author, date: datetime, cost: calculateSumCost(products), reference: reference || String(_id).toUpperCase() };
+        return { _id, supplier, author, date: datetime, cost: calculateSumCost(products), reference: reference ?? String(_id).toUpperCase() };
     }
 
     return null;
 };
 
-const processProductItem = (item: any) => ({ ...item, cost: item.cost || 0, discount: item.discount || 0 });
+const processProductItem = (item: any) => ({ ...item, cost: item.cost ?? 0, discount: item.discount ?? 0 });
 
 const processProductData = (result: ReceiptDocument[]): any[] => {
     const product: any[] = [];

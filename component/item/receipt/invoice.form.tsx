@@ -124,7 +124,7 @@ const InvoiceForm = ({ mode, record, products, doSubmit }: { mode: 'add' | 'edit
             <div className="p-fluid formgrid grid gap-field-parent">
                 <div className="field col-12 gap-field">
                     <label htmlFor="date">Tanggal</label>
-                    <Calendar showIcon showButtonBar readOnlyInput hideOnDateTimeSelect id="date" placeholder="Tanggal pengadaan" dateFormat="dd/mm/yy" value={date} onChange={({ value }) => setDate(value || null)} />
+                    <Calendar showIcon showButtonBar readOnlyInput hideOnDateTimeSelect id="date" placeholder="Tanggal pengadaan" dateFormat="dd/mm/yy" value={date} onChange={({ value }) => setDate(value ?? null)} />
                     {mode === 'add' && <small>Kosongkan untuk pengisian otomatis hari ini</small>}
                 </div>
                 <div className="field col-12 gap-field">

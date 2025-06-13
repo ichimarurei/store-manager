@@ -32,13 +32,13 @@ const doSubmit = async (record: any, _id?: string) => {
 
     if (validated.success) {
         try {
-            const response = await fetch(`/api/product${_id ? `/${_id}` : ''}`, {
+            const response = await fetch(_id ? `/api/product/${_id}` : '/api/product', {
                 method: !_id ? 'POST' : 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(record)
             });
             const result = await response.json();
-            saved = result?.saved || false;
+            saved = result?.saved ?? false;
         } catch (_) {
             console.error(_);
         }
@@ -68,6 +68,7 @@ const ProductPage = ({ params }: { params: Promise<{ _id: string }> }) => {
                 setId(_id);
                 setLoading(false);
             } catch (_) {
+                console.error(_);
                 toaster(toast.current, [{ severity: 'error', summary: 'Gagal memuat data!', detail: 'Data tidak dapat dimuat oleh Sistem' }], 'product');
             }
         };

@@ -15,7 +15,7 @@ const Navigator = ({ mode, item, onClicking }: { mode: 'button' | 'link'; item?:
     ) : (
         mode === 'link' && (
             <Link href="javascript:void(0)" style={{ display: 'flex', alignItems: 'center' }} onClick={onClicking}>
-                <Image alt="product image" src={item?.images?.at(0) || getDefaultProduct()} width="32" height="32" style={{ verticalAlign: 'middle' }} imageStyle={{ borderRadius: '50%', objectFit: 'cover' }} />
+                <Image alt="product image" src={item?.images?.at(0) ?? getDefaultProduct()} width="32" height="32" style={{ verticalAlign: 'middle' }} imageStyle={{ borderRadius: '50%', objectFit: 'cover' }} />
                 <span style={{ marginLeft: '.5em', verticalAlign: 'middle' }}>{item?.name}</span>
             </Link>
         )
@@ -63,13 +63,13 @@ const ItemPickOverlay = ({ item, mode, addToCart }: { item?: ProductDocument; mo
                         <label htmlFor="bundleAmount">
                             Qty <sup className="text-red-500">*</sup>
                         </label>
-                        <InputNumber id="bundleAmount" placeholder="Qty barang masuk" value={qty} min={0} maxFractionDigits={0} onChange={({ value }) => setQty(value || 0)} />
+                        <InputNumber id="bundleAmount" placeholder="Qty barang masuk" value={qty} min={0} maxFractionDigits={0} onChange={({ value }) => setQty(value ?? 0)} />
                     </div>
                     <div className="field col-12 md:col-8">
                         <label htmlFor="bundleUnit">
                             Satuan <sup className="text-red-500">*</sup>
                         </label>
-                        <Dropdown id="bundleUnit" optionLabel="name" placeholder="Satuan barang masuk" value={unit || units[0]?.code} options={units} onChange={({ value }) => setUnit(value)} />
+                        <Dropdown id="bundleUnit" optionLabel="name" placeholder="Satuan barang masuk" value={unit ?? units[0]?.code} options={units} onChange={({ value }) => setUnit(value)} />
                         <small>Satuan terkecil atau bundel dari produk</small>
                     </div>
                 </div>
@@ -78,13 +78,13 @@ const ItemPickOverlay = ({ item, mode, addToCart }: { item?: ProductDocument; mo
                         <label htmlFor="cost">
                             Biaya <sup className="text-red-500">*</sup>
                         </label>
-                        <InputNumber id="cost" placeholder="Modal produk" value={cost} onChange={(e) => setCost(e.value || 0)} min={0} maxFractionDigits={0} mode="currency" currency="IDR" />
+                        <InputNumber id="cost" placeholder="Modal produk" value={cost} onChange={(e) => setCost(e.value ?? 0)} min={0} maxFractionDigits={0} mode="currency" currency="IDR" />
                         <small>Dalam rupiah (IDR)</small>
                     </div>
                     <div className="field col-12 md:col-4">
                         <label htmlFor="discount">Diskon</label>
                         <div className="p-inputgroup flex-1">
-                            <InputNumber id="discount" placeholder="Diskon dari supplier" value={discount} onValueChange={(e) => setDiscount(e.value || 0)} min={0} maxFractionDigits={2} />
+                            <InputNumber id="discount" placeholder="Diskon dari supplier" value={discount} onValueChange={(e) => setDiscount(e.value ?? 0)} min={0} maxFractionDigits={2} />
                             <span className="p-inputgroup-addon">%</span>
                         </div>
                     </div>

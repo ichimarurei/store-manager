@@ -33,13 +33,13 @@ const CategoryList = () => {
 
         if (validated.success) {
             try {
-                const response = await fetch(`/api/category${_id ? `/${_id}` : ''}`, {
+                const response = await fetch(_id ? `/api/category/${_id}` : '/api/category', {
                     method: !_id ? 'POST' : 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(record)
                 });
                 const result = await response.json();
-                saved = result?.saved || false;
+                saved = result?.saved ?? false;
             } catch (_) {
                 console.error(_);
             }

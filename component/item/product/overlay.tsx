@@ -14,7 +14,7 @@ const FormOverlay = ({ units, unit, bundle, setBundle }: { units: DropdownItem[]
     const getUnitDetail = useCallback((id: Types.ObjectId) => units.find(({ code }) => code === id) || units[0] || null, [units]);
 
     const placeholderProvider = useCallback(
-        (amount?: number | string | null) => `Qty bundel untuk 1 ${getUnitDetail(bundle?.node?.unit || units[0]?.code)?.name} = ${amount || 0} ${getUnitDetail(unit || units[0]?.code)?.name}`,
+        (amount?: number | string | null) => `Qty bundel untuk 1 ${getUnitDetail(bundle?.node?.unit ?? units[0]?.code)?.name} = ${amount ?? 0} ${getUnitDetail(unit ?? units[0]?.code)?.name}`,
         [bundle?.node?.unit, getUnitDetail, unit, units]
     );
 
@@ -22,7 +22,7 @@ const FormOverlay = ({ units, unit, bundle, setBundle }: { units: DropdownItem[]
 
     const handleUnitChange = ({ value }: DropdownChangeEvent) => setBundle({ ...bundle, node: { amount: 1, unit: value?.code } });
 
-    const handleAmountChange = ({ value }: InputNumberValueChangeEvent) => setBundle({ ...bundle, contain: { amount: value || 0, unit: unit || units[0]?.code } });
+    const handleAmountChange = ({ value }: InputNumberValueChangeEvent) => setBundle({ ...bundle, contain: { amount: value ?? 0, unit: unit ?? units[0]?.code } });
 
     const handleInputChange = ({ value }: InputNumberChangeEvent) => setBundlePlaceholder(placeholderProvider(value));
 
@@ -36,11 +36,11 @@ const FormOverlay = ({ units, unit, bundle, setBundle }: { units: DropdownItem[]
                 <div className="p-fluid formgrid grid gap-field-parent">
                     <div className="field col-12 gap-field">
                         <label htmlFor="bundleUnit">Satuan</label>
-                        <Dropdown id="bundleUnit" optionLabel="name" placeholder="Satuan bundel" value={getUnitDetail(bundle?.node?.unit || units[0]?.code)} options={units} onChange={handleUnitChange} />
+                        <Dropdown id="bundleUnit" optionLabel="name" placeholder="Satuan bundel" value={getUnitDetail(bundle?.node?.unit ?? units[0]?.code)} options={units} onChange={handleUnitChange} />
                     </div>
                     <div className="field col-12 gap-field">
                         <label htmlFor="bundleAmount">Qty</label>
-                        <InputNumber id="bundleAmount" placeholder={bundlePlaceholder} value={bundle?.contain?.amount || 0} min={0} maxFractionDigits={0} onValueChange={handleAmountChange} onChange={handleInputChange} />
+                        <InputNumber id="bundleAmount" placeholder={bundlePlaceholder} value={bundle?.contain?.amount ?? 0} min={0} maxFractionDigits={0} onValueChange={handleAmountChange} onChange={handleInputChange} />
                         <small>{bundlePlaceholder}</small>
                     </div>
                 </div>

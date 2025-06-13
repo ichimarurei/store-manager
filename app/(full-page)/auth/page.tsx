@@ -94,7 +94,7 @@ const LoginPage = () => {
             const info = await getAppInfo();
 
             if (info) {
-                setAppInfo({ name: info.name, logo: info?.logo || envValues.application.logo });
+                setAppInfo({ name: info.name, logo: info?.logo ?? envValues.application.logo });
             }
         };
 

@@ -46,13 +46,13 @@ const doSubmit = async (record: any, _id?: string) => {
 
     if (validated.success) {
         try {
-            const response = await fetch(`/api/receipt${_id ? `/${_id}` : ''}`, {
+            const response = await fetch(_id ? `/api/receipt/${_id}` : '/api/receipt', {
                 method: !_id ? 'POST' : 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(record)
             });
             const result = await response.json();
-            saved = result?.saved || false;
+            saved = result?.saved ?? false;
         } catch (_) {
             console.error(_);
         }
@@ -89,7 +89,7 @@ const Contents = ({ record }: { record: any }) => {
 
     const getProducts = async () => setList(await fetchProducts());
 
-    const initializeCart = (record: any) => setCarts(parserCart(record?.products || []));
+    const initializeCart = (record: any) => setCarts(parserCart(record?.products ?? []));
 
     useEffect(() => {
         getProducts();
@@ -129,6 +129,7 @@ const ReceiptPanel = ({ params }: { params: Promise<{ _id: string }> }) => {
 
                 setLoading(false);
             } catch (_) {
+                console.error(_);
                 toaster(toast.current, [{ severity: 'error', summary: 'Gagal memuat data!', detail: 'Data tidak dapat dimuat oleh Sistem' }], 'receipt');
             }
         };

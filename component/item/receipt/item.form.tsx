@@ -79,7 +79,7 @@ const ItemForm = ({ mode, record, list, addToCart, getProducts }: { mode: 'add' 
     }, []);
 
     useEffect(() => {
-        setLogInfo(record?.author || null);
+        setLogInfo(record?.author ?? null);
     }, [record]);
 
     return (

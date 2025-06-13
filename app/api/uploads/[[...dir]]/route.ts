@@ -5,10 +5,10 @@ import { NextRequest } from 'next/server';
 import { basename, extname } from 'path';
 
 const config = {
-    userId: process.env.CLOUD_STORAGE_APP_USER || '',
-    clientId: process.env.CLOUD_STORAGE_APP_CLIENT || '',
-    clientSecret: process.env.CLOUD_STORAGE_APP_SECRET || '',
-    useCloud: (process.env.CLOUD_STORAGE_APP_ACTIVE || '') === 'true'
+    userId: process.env.CLOUD_STORAGE_APP_USER ?? '',
+    clientId: process.env.CLOUD_STORAGE_APP_CLIENT ?? '',
+    clientSecret: process.env.CLOUD_STORAGE_APP_SECRET ?? '',
+    useCloud: (process.env.CLOUD_STORAGE_APP_ACTIVE ?? '') === 'true'
 };
 
 const uploadToCloud = async (file: File): Promise<string | null> => {
@@ -30,7 +30,7 @@ const uploadToLocal = async (file: File, dir?: string): Promise<string | null> =
     let uploaded = null;
 
     try {
-        const path = getUploadedPath(file.name, dir || 'global');
+        const path = getUploadedPath(file.name, dir ?? 'global');
         const paths = path.split('/public/');
         const fileStream = createWriteStream(path);
         fileStream.write(Buffer.from(await file.arrayBuffer()));
