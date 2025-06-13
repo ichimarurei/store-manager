@@ -29,19 +29,19 @@ const InfoForm = ({ toast, record, doSubmit }: { toast: Toast | null; record: In
     const [loading, setLoading] = useState(false);
 
     const setBasicInfo = (record: InfoDocument) => {
-        setName(record.name || '');
-        setAddress(record?.address || '');
-        setLogo(record?.logo || getDefaultLogo());
+        setName(record.name ?? '');
+        setAddress(record?.address ?? '');
+        setLogo(record?.logo ?? getDefaultLogo());
     };
 
     const setDetailInfo = (record: InfoDocument) => {
-        setLine1(record?.about?.line1 || '');
-        setLine2(record?.about?.line2 || '');
+        setLine1(record?.about?.line1 ?? '');
+        setLine2(record?.about?.line2 ?? '');
     };
 
     const setDebtInfo = (record: InfoDocument) => {
-        setCustomer(record?.debtConfigFrom?.customer || 0);
-        setSupplier(record?.debtConfigFrom?.supplier || 0);
+        setCustomer(record?.debtConfigFrom?.customer ?? 0);
+        setSupplier(record?.debtConfigFrom?.supplier ?? 0);
     };
 
     useEffect(() => {
@@ -67,8 +67,8 @@ const InfoForm = ({ toast, record, doSubmit }: { toast: Toast | null; record: In
                 setLogo(image);
             }
         } catch (_) {
-        console.error(_);
-    }
+            console.error(_);
+        }
 
         toast?.show({ severity, summary, detail, life: 3000 });
     };
@@ -99,6 +99,7 @@ const InfoForm = ({ toast, record, doSubmit }: { toast: Toast | null; record: In
                 </div>
                 <div className="field col-12 md:col-6 gap-field">
                     <label htmlFor="line2" className="hidden md:block">
+                        {' '}
                         &nbsp;
                     </label>
                     <InputText id="line2" type="text" placeholder="Baris kedua" value={line2} onChange={({ target }) => setLine2(target.value)} />
@@ -106,20 +107,20 @@ const InfoForm = ({ toast, record, doSubmit }: { toast: Toast | null; record: In
                 </div>
                 <div className="field col-12 md:col-6">
                     <label htmlFor="supplier">Jatuh Tempo Hutang Pembelian</label>
-                    <InputNumber id="supplier" placeholder="Nominal" value={supplier} onValueChange={(e) => setSupplier(e.value || 0)} min={0} maxFractionDigits={0} />
+                    <InputNumber id="supplier" placeholder="Nominal" value={supplier} onValueChange={(e) => setSupplier(e.value ?? 0)} min={0} maxFractionDigits={0} />
                     <small>*hari</small>
                 </div>
                 <div className="field col-12 md:col-6">
                     <label htmlFor="customer">Jatuh Tempo Hutang Pelanggan</label>
-                    <InputNumber id="customer" placeholder="Nominal" value={customer} onValueChange={(e) => setCustomer(e.value || 0)} min={0} maxFractionDigits={0} />
+                    <InputNumber id="customer" placeholder="Nominal" value={customer} onValueChange={(e) => setCustomer(e.value ?? 0)} min={0} maxFractionDigits={0} />
                     <small>*hari</small>
                 </div>
             </div>
             <div className="p-fluid formgrid grid gap-field-parent">
                 <div className="field col-12 md:col-4">
-                    <label>Logo</label>
+                    <label htmlFor="logo-preview">Logo</label>
                     <div className="flex justify-content-center">
-                        <Image src={logo} alt="Logo" width="250" preview />
+                        <Image id="logo-preview" src={logo} alt="Logo" width="250" preview />
                     </div>
                 </div>
                 <div className="field col-12 md:col-8">

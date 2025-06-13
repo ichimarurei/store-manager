@@ -30,16 +30,16 @@ const UserForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; mode
     const [loading, setLoading] = useState(false);
 
     const setBasicInfo = (record: UserDocument) => {
-        setName(record.name || '');
-        setAddress(record?.address || '');
-        setPhone(record?.phone || '');
-        setPhoto(record?.photo || getDefaultPhoto());
+        setName(record.name ?? '');
+        setAddress(record?.address ?? '');
+        setPhone(record?.phone ?? '');
+        setPhoto(record?.photo ?? getDefaultPhoto());
     };
 
     const setAccessInfo = (record: UserDocument) => {
         setUsername(record.username);
         setPassword(record.password);
-        setActive(record?.active || false);
+        setActive(record?.active ?? false);
         setPrivilege(privileges.find(({ code }) => code === record?.privilege) || privileges[0]);
     };
 
@@ -65,8 +65,8 @@ const UserForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; mode
                 setPhoto(image);
             }
         } catch (_) {
-        console.error(_);
-    }
+            console.error(_);
+        }
 
         toast?.show({ severity, summary, detail, life: 3000 });
     };
@@ -83,10 +83,10 @@ const UserForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; mode
                     address,
                     active,
                     password: provideValidPassword(password),
-                    privilege: privilege?.code || privileges[0].code,
+                    privilege: privilege?.code ?? privileges[0].code,
                     ...(mode === 'edit' && { _id: record?._id })
                 },
-                `${record?._id || ''}`
+                `${record?._id ?? ''}`
             );
 
             if (!saved) {
@@ -152,9 +152,9 @@ const UserForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; mode
             </div>
             <div className="p-fluid formgrid grid gap-field-parent">
                 <div className="field col-12 md:col-4">
-                    <label>Foto Profil</label>
+                    <label htmlFor="photo-preview">Foto Profil</label>
                     <div className="flex justify-content-center">
-                        <Image src={photo} alt="Foto profil" width="250" preview />
+                        <Image id="photo-preview" src={photo} alt="Foto profil" width="250" preview />
                     </div>
                 </div>
                 <div className="field col-12 md:col-8">

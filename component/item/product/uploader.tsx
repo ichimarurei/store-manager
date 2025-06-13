@@ -41,8 +41,8 @@ const FormUploader = ({ images, setImages, toast }: { images: string[]; toast: T
                 setImages(images);
             }
         } catch (_) {
-        console.error(_);
-    }
+            console.error(_);
+        }
 
         toast?.show({ severity, summary, detail, life: 3000 });
     };
@@ -50,9 +50,10 @@ const FormUploader = ({ images, setImages, toast }: { images: string[]; toast: T
     return (
         <div className="p-fluid formgrid grid gap-field-parent" style={{ marginTop: '2em' }}>
             <div className="field col-12 md:col-4">
-                <label>Gambar Produk</label>
+                <label htmlFor="product-gallery">Gambar Produk</label>
                 <div className="flex justify-content-center">
                     <Galleria
+                        id="product-gallery"
                         value={images}
                         responsiveOptions={galleriaResponsiveOptions}
                         item={galleriaItemTemplate}
