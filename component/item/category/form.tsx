@@ -39,6 +39,7 @@ const CategoryForm = ({
 
     const submitAction = async () => {
         if (!loading) {
+            toast?.show({ severity: 'info', summary: 'Menyimpan', detail: 'Memproses penyimpanan data kategori barang ...' });
             setLoading(true);
             await doAction();
         }
@@ -65,7 +66,7 @@ const CategoryForm = ({
             </div>
             <div className="flex justify-content-between flex-wrap">
                 <Button label="Batal" icon="pi pi-times" severity="info" onClick={() => setVisible(false)} />
-                <Button label="Simpan" icon="pi pi-check" className="form-side-button" onClick={async () => await submitAction()} />
+                <Button label="Simpan" icon="pi pi-check" className="form-side-button" disabled={loading} onClick={async () => await submitAction()} />
             </div>
         </div>
     );

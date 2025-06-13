@@ -1,4 +1,4 @@
-import { getDefaultProduct } from '@/lib/client.action';
+import { getDefaultProduct, initUnits } from '@/lib/client.action';
 import { ProductDocument } from '@/models/product.schema';
 import { DropdownItem } from '@/types/app';
 import Link from 'next/link';
@@ -7,7 +7,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { Image } from 'primereact/image';
 import { InputNumber } from 'primereact/inputnumber';
 import { OverlayPanel } from 'primereact/overlaypanel';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 const Navigator = ({ mode, item, onClicking }: { mode: 'button' | 'link'; item?: ProductDocument; onClicking: (e: React.SyntheticEvent) => void }) => {
     return mode === 'button' ? (
@@ -32,27 +32,17 @@ const ItemPickOverlay = ({ item, mode, addToCart }: { item?: ProductDocument; mo
 
     const onClicking = (e: React.SyntheticEvent) => {
         e.preventDefault();
-        setUnit(undefined);
         setQty(0);
         setCost(0);
         setDiscount(0);
+        setUnit(undefined);
+
+        if (item) {
+            setUnits(initUnits(item));
+        }
+
         overlayPanel.current?.toggle(e);
     };
-
-    useEffect(() => {
-        const initUnits = () => {
-            const options = [{ code: (item?.unit as any)?._id, name: (item?.unit as any)?.name }];
-
-            if (item?.bundle) {
-                options.push({ code: (item.bundle.node?.unit as any)?._id, name: (item.bundle.node?.unit as any)?.name });
-            }
-
-            setUnits(options);
-        };
-
-        initUnits();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     return (
         <div>

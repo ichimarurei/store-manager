@@ -1,4 +1,4 @@
-import { formatRp, getDefaultProduct } from '@/lib/client.action';
+import { formatRp, getDefaultProduct, pickUnitDetail } from '@/lib/client.action';
 import { TableInventoryProps } from '@/types/layout';
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
@@ -21,8 +21,8 @@ export const TableByItem = ({ list, loading, filters, globalFilterValue, onGloba
             <span style={{ marginLeft: '.5em', verticalAlign: 'middle' }}>{product.name}</span>
         </Link>
     );
-    const editBodyTemplate = ({ product, parent }: any) => <Button icon="pi pi-pencil" outlined onClick={() => router.push(`/receipt/${parent}`)} />;
-    const qtyBodyTemplate = ({ qty, unit }: any) => `${Intl.NumberFormat('id-ID', { style: 'decimal' }).format(qty)} ${unit?.name ?? ''}`;
+    const editBodyTemplate = ({ parent }: any) => <Button icon="pi pi-pencil" outlined onClick={() => router.push(`/receipt/${parent}`)} />;
+    const qtyBodyTemplate = ({ qty, unit, product }: any) => `${Intl.NumberFormat('id-ID', { style: 'decimal' }).format(qty)} ${pickUnitDetail(product, unit)?.name ?? ''}`;
     const discountBodyTemplate = ({ discount }: any) => `${discount ? discount + ' %' : ''}`;
     const costBodyTemplate = ({ cost }: any) => formatRp(cost);
     const dateBodyTemplate = ({ date }: any) => dayjs(date).format('DD MMMM YYYY');

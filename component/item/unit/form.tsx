@@ -40,6 +40,7 @@ const UnitForm = ({
 
     const submitAction = async () => {
         if (!loading) {
+            toast?.show({ severity: 'info', summary: 'Menyimpan', detail: 'Memproses penyimpanan data satuan barang ...' });
             setLoading(true);
             await doAction();
         }
@@ -71,7 +72,7 @@ const UnitForm = ({
             </div>
             <div className="flex justify-content-between flex-wrap">
                 <Button label="Batal" icon="pi pi-times" severity="info" onClick={() => setVisible(false)} />
-                <Button label="Simpan" icon="pi pi-check" className="form-side-button" onClick={async () => await submitAction()} />
+                <Button label="Simpan" icon="pi pi-check" className="form-side-button" disabled={loading} onClick={async () => await submitAction()} />
             </div>
         </div>
     );

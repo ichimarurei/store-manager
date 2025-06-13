@@ -1,10 +1,12 @@
 'user client';
 
 import { InfoDocument } from '@/models/info.schema';
+import { ProductDocument } from '@/models/product.schema';
 import { createHash } from 'crypto';
 import { Toast } from 'primereact/toast';
 
 const getDefaultImage = (name: string) => `/storage/image/global/${name}.jpg`;
+const parseUnit = (item: any) => ({ code: item?._id, name: item?.name });
 const getUnitDetail = (item: any, unit: string) => (item?._id === unit ? item : null);
 
 export const doCancelAction = (path: string) => (window.location.href = `/${path}`);
@@ -78,6 +80,16 @@ export const pickUnitDetail = (item: any, unit: string) => {
     unitDetail ??= getUnitDetail(item?.bundle?.node?.unit, unit);
 
     return unitDetail;
+};
+
+export const initUnits = (item: ProductDocument) => {
+    const options = [parseUnit(item?.unit)];
+
+    if (item?.bundle) {
+        options.push(parseUnit(item.bundle.node?.unit));
+    }
+
+    return options;
 };
 
 export const handleFailedSave = (toast: Toast | null, notices: string[]) => {

@@ -97,6 +97,7 @@ const InvoiceForm = ({ mode, record, products, doSubmit }: { mode: 'add' | 'edit
 
     const submitAction = async () => {
         if (!loading) {
+            toast.current?.show({ severity: 'info', summary: 'Menyimpan', detail: 'Memproses penyimpanan data barang masuk ...' });
             setLoading(true);
             await doAction();
         }
@@ -157,7 +158,7 @@ const InvoiceForm = ({ mode, record, products, doSubmit }: { mode: 'add' | 'edit
             </div>
             <div className="flex justify-content-between flex-wrap">
                 <Button label="Batal" icon="pi pi-times" severity="info" onClick={() => router.replace('/receipt')} />
-                <Button label="Simpan" icon="pi pi-check" className="form-action-button" onClick={async () => await submitAction()} />
+                <Button label="Simpan" icon="pi pi-check" className="form-action-button" disabled={loading} onClick={async () => await submitAction()} />
             </div>
             <Sidebar visible={visible} position="right" className="w-full md:w-25rem" onHide={() => setVisible(false)}>
                 <h2>Supplier Baru</h2>

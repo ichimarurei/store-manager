@@ -1,5 +1,4 @@
-import { pickUnitDetail } from '@/lib/client.action';
-import { ProductDocument } from '@/models/product.schema';
+import { initUnits, pickUnitDetail } from '@/lib/client.action';
 import { DropdownItem } from '@/types/app';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
@@ -7,18 +6,6 @@ import { InputNumber } from 'primereact/inputnumber';
 import { OverlayPanel } from 'primereact/overlaypanel';
 import { SplitButton } from 'primereact/splitbutton';
 import { useRef, useState } from 'react';
-
-const parseUnit = (item: any) => ({ code: item?._id, name: item?.name });
-
-const initUnits = (item: ProductDocument) => {
-    const options = [parseUnit(item?.unit)];
-
-    if (item?.bundle) {
-        options.push(parseUnit(item.bundle.node?.unit));
-    }
-
-    return options;
-};
 
 const ItemEditor = ({ product, selected, setSelected }: { product: any; selected: any[]; setSelected: (value: any[]) => void }) => {
     const [unit, setUnit] = useState<DropdownItem | undefined>();
