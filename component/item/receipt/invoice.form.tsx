@@ -1,5 +1,5 @@
 import SupplierMiniForm from '@/component/supplier/form.mini';
-import { toaster } from '@/lib/client.action';
+import { handleFailedSave, toaster } from '@/lib/client.action';
 import { ReceiptDocument } from '@/models/receipt.schema';
 import { DropdownItem, SubmitResponse } from '@/types/app';
 import dayjs from 'dayjs';
@@ -36,10 +36,10 @@ const doSubmitSupplier = async (record: any) => {
                 body: JSON.stringify(record)
             });
             const result = await response.json();
-            saved = result?.saved || false;
+            saved = result?.saved ?? false;
         } catch (_) {
-        console.error(_);
-    }
+            console.error(_);
+        }
     } else {
         notices = validated.issues.map(({ message }) => message);
     }
@@ -75,29 +75,21 @@ const InvoiceForm = ({ mode, record, products, doSubmit }: { mode: 'add' | 'edit
     const { data: session } = useSession();
     const router = useRouter();
 
-    const handleSubmitResponse = ({ saved, notices }: SubmitResponse) => {
-        if (!saved) {
-            setLoading(false);
-
-            if (notices.length > 0) {
-                toaster(
-                    toast.current,
-                    notices.map((detail) => ({ severity: 'warn', summary: 'Validasi gagal!', detail }))
-                );
-            } else {
-                toaster(toast.current, [{ severity: 'warn', summary: 'Gagal simpan!', detail: 'Data tidak dapat disimpan oleh Sistem' }]);
-            }
-        } else {
+    const handleSubmitResponse = (submitted: SubmitResponse) => {
+        if (submitted.saved) {
             toaster(toast.current, [{ severity: 'success', summary: 'Berhasil simpan', detail: 'Data berhasil disimpan di Sistem' }], 'receipt');
+        } else {
+            setLoading(false);
+            handleFailedSave(toast.current, submitted.notices);
         }
     };
 
-    const buildBasePayload = () => ({ products, reference, date, supplier: supplier?.code || suppliers[0].code, operator: session?.user?.name });
+    const buildBasePayload = () => ({ products, reference, date, supplier: supplier?.code ?? suppliers[0].code, operator: session?.user?.name });
 
     const generatePayload = () => ({ ...buildBasePayload(), ...(mode === 'edit' && { _id: record?._id, author: { ...author, created: { time: dayjs(author?.created?.time).toDate(), by: author.created?.by?._id } } }) });
 
     const doAction = async () => {
-        const response = await doSubmit(generatePayload(), `${record?._id || ''}`);
+        const response = await doSubmit(generatePayload(), `${record?._id ?? ''}`);
         handleSubmitResponse(response);
     };
 
@@ -115,8 +107,8 @@ const InvoiceForm = ({ mode, record, products, doSubmit }: { mode: 'add' | 'edit
     }, []);
 
     useEffect(() => {
-        setAuthor(record?.author || null);
-        setReference(record?.reference || '');
+        setAuthor(record?.author ?? null);
+        setReference(record?.reference ?? '');
         setDate(record?.date ? dayjs(record?.date).toDate() : null);
 
         if (record?.supplier) {
