@@ -21,6 +21,6 @@ export const metadata: Metadata = {
     }
 };
 
-export default function SimpleLayout({ children }: SimpleLayoutProps) {
+export default function SimpleLayout({ children }: Readonly<SimpleLayoutProps>) {
     return <React.Fragment>{children}</React.Fragment>;
 }
