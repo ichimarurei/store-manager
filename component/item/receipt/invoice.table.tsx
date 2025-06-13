@@ -27,7 +27,7 @@ export const TableByReceipt = ({ list, loading, filters, globalFilterValue, onGl
     return (
         <DataTable
             className="p-datatable-gridlines"
-            header={() => <RenderHeader modePreview="faktur" globalFilterValue={globalFilterValue} onGlobalFilterChange={onGlobalFilterChange} dateFilter={dateFilter} setDateFilter={setDateFilter} />}
+            header={<RenderHeader modePreview="faktur" globalFilterValue={globalFilterValue} onGlobalFilterChange={onGlobalFilterChange} dateFilter={dateFilter} setDateFilter={setDateFilter} />}
             loading={loading}
             filters={filters}
             value={list}
