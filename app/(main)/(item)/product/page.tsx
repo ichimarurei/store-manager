@@ -59,7 +59,9 @@ const ProductList = () => {
             try {
                 const response = await fetch('/api/product', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
                 setList(await response.json());
-            } catch (_) {}
+            } catch (_) {
+                console.error(_);
+            }
 
             setLoading(false);
             initFilters();

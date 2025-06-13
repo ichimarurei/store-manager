@@ -4,9 +4,9 @@ import { isEmpty } from 'lodash';
 
 const buildUpdateData = (params: any): Partial<CustomerDocument> => ({
     name: params.name,
-    phone: params?.phone || '',
-    address: params?.address || '',
-    city: params?.city || ''
+    phone: params?.phone ?? '',
+    address: params?.address ?? '',
+    city: params?.city ?? ''
 });
 
 export const update = async (params: any): Promise<CustomerDocument | null> => {
@@ -17,7 +17,9 @@ export const update = async (params: any): Promise<CustomerDocument | null> => {
             await handshakeDB();
             saved = await customerSchema.findOneAndUpdate({ _id: params._id }, buildUpdateData(params), { new: true, lean: true }).lean<CustomerDocument>();
         }
-    } catch (_) {}
+    } catch (_) {
+        console.error(_);
+    }
 
     return saved;
 };

@@ -10,7 +10,9 @@ export const update = async (params: any): Promise<CategoryDocument | null> => {
             await handshakeDB();
             saved = await categorySchema.findOneAndUpdate({ _id: params._id }, { name: params.name }, { new: true, lean: true }).lean<CategoryDocument>();
         }
-    } catch (_) {}
+    } catch (_) {
+        console.error(_);
+    }
 
     return saved;
 };

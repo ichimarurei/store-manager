@@ -124,7 +124,9 @@ const ProductForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; m
                 } else {
                     setUnits(result.map(({ _id, name }) => ({ name, code: _id })));
                 }
-            } catch (_) {}
+            } catch (_) {
+        console.error(_);
+    }
         };
 
         fetching('category');

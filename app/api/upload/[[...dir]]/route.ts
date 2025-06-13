@@ -19,7 +19,9 @@ const uploadToCloud = async (file: File): Promise<string | null> => {
         const byteArrayBuffer = Buffer.from(await file.arrayBuffer());
         const uploading: any = await new Promise((resolve) => cloudinary.uploader.upload_stream({ overwrite: true, public_id: basename(file.name, extname(file.name)) }, (_, result) => resolve(result)).end(byteArrayBuffer));
         uploaded = uploading?.secure_url;
-    } catch (_) {}
+    } catch (_) {
+        console.error(_);
+    }
 
     return uploaded;
 };
@@ -34,7 +36,9 @@ const uploadToLocal = async (file: File, dir?: string): Promise<string | null> =
         fileStream.write(Buffer.from(await file.arrayBuffer()));
         fileStream.end();
         uploaded = `/${paths[1]}`;
-    } catch (_) {}
+    } catch (_) {
+        console.error(_);
+    }
 
     return uploaded;
 };

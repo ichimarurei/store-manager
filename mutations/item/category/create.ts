@@ -10,7 +10,9 @@ export const create = async (params: any): Promise<CategoryDocument | null> => {
             await handshakeDB();
             saved = await categorySchema.create({ name: params.name });
         }
-    } catch (_) {}
+    } catch (_) {
+        console.error(_);
+    }
 
     return saved;
 };

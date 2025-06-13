@@ -64,7 +64,9 @@ const UserForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; mode
                 detail = 'Foto berhasil diunggah';
                 setPhoto(image);
             }
-        } catch (_) {}
+        } catch (_) {
+        console.error(_);
+    }
 
         toast?.show({ severity, summary, detail, life: 3000 });
     };

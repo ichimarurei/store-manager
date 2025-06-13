@@ -37,7 +37,9 @@ const doSubmitSupplier = async (record: any) => {
             });
             const result = await response.json();
             saved = result?.saved || false;
-        } catch (_) {}
+        } catch (_) {
+        console.error(_);
+    }
     } else {
         notices = validated.issues.map(({ message }) => message);
     }
@@ -52,7 +54,9 @@ const fetchSuppliers = async () => {
         const response = await fetch('/api/supplier', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
         const list = await response.json();
         suppliers.push(...list.map(({ _id, name }: any) => ({ name, code: _id })));
-    } catch (_) {}
+    } catch (_) {
+        console.error(_);
+    }
 
     suppliers.push({ code: 'add-new', name: 'Tambah Supplier Baru' });
 

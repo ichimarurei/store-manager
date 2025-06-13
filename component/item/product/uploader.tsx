@@ -40,7 +40,9 @@ const FormUploader = ({ images, setImages, toast }: { images: string[]; toast: T
                 detail = 'Foto berhasil diunggah';
                 setImages(images);
             }
-        } catch (_) {}
+        } catch (_) {
+        console.error(_);
+    }
 
         toast?.show({ severity, summary, detail, life: 3000 });
     };

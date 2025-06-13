@@ -7,7 +7,7 @@ const isBundleUnitMatching = (item: ProductDocument, unit: string): boolean => (
 
 const calculateQty = (item: ProductDocument, unit: string, qty: number) => {
     if (isBundleUnitMatching(item, unit)) {
-        return qty * (item.bundle?.contain?.amount || 1);
+        return qty * (item.bundle?.contain?.amount ?? 1);
     }
 
     return qty;
@@ -40,7 +40,7 @@ const processSales = (items: ProductDocument[], sales: SalesDocument[], inventor
                 inventories[String(product)] -= calculateQty(item, String(salesQty.unit), salesQty.qty);
 
                 if (bonusQty) {
-                    inventories[String(product)] -= calculateQty(item, String(bonusQty?.unit), bonusQty?.qty || 0);
+                    inventories[String(product)] -= calculateQty(item, String(bonusQty?.unit), bonusQty?.qty ?? 0);
                 }
             }
         })
@@ -61,9 +61,11 @@ export const syncStock = async () => {
         inventories = processSales(items, sales, inbound);
 
         for (const key in inventories) {
-            await productSchema.findOneAndUpdate({ _id: key }, { inventory: inventories?.[key] || 0 }, { new: true, lean: true }).lean<ProductDocument>();
+            await productSchema.findOneAndUpdate({ _id: key }, { inventory: inventories?.[key] ?? 0 }, { new: true, lean: true }).lean<ProductDocument>();
         }
-    } catch (_) {}
+    } catch (_) {
+        console.error(_);
+    }
 
     return inventories;
 };

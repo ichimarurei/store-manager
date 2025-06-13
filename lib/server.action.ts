@@ -23,7 +23,9 @@ export const doSyncStock = async () => {
 
     try {
         fetched = await syncStock();
-    } catch (_) {}
+    } catch (_) {
+        console.error(_);
+    }
 
     return fetched;
 };

@@ -7,9 +7,9 @@ import { isEmpty } from 'lodash';
 const isValidParams = (params: any): boolean => !isEmpty(params?.name) && !isEmpty(params?.username) && !isEmpty(params?.password);
 
 const buildConditionalData = ({ photo, phone, address, privilege }: { photo?: string; phone?: string; address?: string; privilege?: Privilege }): Partial<UserDocument> => ({
-    photo: photo || getDefaultPhoto(),
-    phone: phone || '',
-    address: address || '',
+    photo: photo ?? getDefaultPhoto(),
+    phone: phone ?? '',
+    address: address ?? '',
     ...(privilege && { privilege })
 });
 
@@ -29,7 +29,9 @@ export const create = async (params: any): Promise<UserDocument | null> => {
             await handshakeDB();
             saved = await userSchema.create(buildCreateData(params));
         }
-    } catch (_) {}
+    } catch (_) {
+        console.error(_);
+    }
 
     return saved;
 };

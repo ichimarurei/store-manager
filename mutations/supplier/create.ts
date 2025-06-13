@@ -4,8 +4,8 @@ import { isEmpty } from 'lodash';
 
 const buildCreateData = (params: any): Partial<SupplierDocument> => ({
     name: params.name,
-    phone: params?.phone || '',
-    address: params?.address || ''
+    phone: params?.phone ?? '',
+    address: params?.address ?? ''
 });
 
 export const create = async (params: any): Promise<SupplierDocument | null> => {
@@ -16,7 +16,9 @@ export const create = async (params: any): Promise<SupplierDocument | null> => {
             await handshakeDB();
             saved = await supplierSchema.create(buildCreateData(params));
         }
-    } catch (_) {}
+    } catch (_) {
+        console.error(_);
+    }
 
     return saved;
 };

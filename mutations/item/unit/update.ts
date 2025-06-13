@@ -8,9 +8,11 @@ export const update = async (params: any): Promise<UnitDocument | null> => {
     try {
         if (!isEmpty(params?.name) && !isEmpty(params?._id)) {
             await handshakeDB();
-            saved = await unitSchema.findOneAndUpdate({ _id: params._id }, { name: params.name, short: params?.short || '' }, { new: true, lean: true }).lean<UnitDocument>();
+            saved = await unitSchema.findOneAndUpdate({ _id: params._id }, { name: params.name, short: params?.short ?? '' }, { new: true, lean: true }).lean<UnitDocument>();
         }
-    } catch (_) {}
+    } catch (_) {
+        console.error(_);
+    }
 
     return saved;
 };

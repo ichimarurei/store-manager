@@ -14,8 +14,10 @@ export const buildAuthorPayload = async <T>(operator: string, mode: 'create' | '
     try {
         await handshakeDB();
         const user = await userSchema.findOne({ username: operator }).select('-__v').lean<UserDocument>();
-        by = user?._id || null;
-    } catch (_) {}
+        by = user?._id ?? null;
+    } catch (_) {
+        console.error(_);
+    }
 
     return !isEmpty(by)
         ? {
