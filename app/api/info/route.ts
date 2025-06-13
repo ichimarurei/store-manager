@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     try {
         const params = await request.json();
         const saved = await update(params);
-        response = Response.json({ saved: !saved?._id ? false : true }, { status: 200 });
+        response = Response.json({ saved: !!saved?._id }, { status: 200 });
     } catch (error) {
         response = createErrorResponse(error);
     }

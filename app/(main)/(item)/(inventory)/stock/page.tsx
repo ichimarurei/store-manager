@@ -62,6 +62,7 @@ const ProductList = () => {
                 window.location.reload();
             }
         } catch (_) {
+            console.error(_);
             toast.current?.show({ severity: 'warn', summary: 'Gagal sinkron stok!', detail: 'Data stok tidak dapat disinkronisasi !' });
             setLoading(false);
         }

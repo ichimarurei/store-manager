@@ -44,7 +44,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         const { _id } = await params;
         const payload = await request.json();
         const saved = await update({ ...payload, _id });
-        response = Response.json({ saved: !saved?._id ? false : true }, { status: 200 });
+        response = Response.json({ saved: !!saved?._id }, { status: 200 });
     } catch (error) {
         response = createErrorResponse(error);
     }
