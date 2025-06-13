@@ -68,4 +68,4 @@ export interface DebitDocument extends Document {
     author: IAuthor;
 }
 
-export default mongoose.models.Debit || mongoose.model<DebitDocument>('Debit', Debit);
+export default mongoose.models.Debit ?? mongoose.model<DebitDocument>('Debit', Debit);

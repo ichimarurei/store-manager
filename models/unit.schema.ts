@@ -10,4 +10,4 @@ export interface UnitDocument extends Document {
     short?: string;
 }
 
-export default mongoose.models.Unit || mongoose.model<UnitDocument>('Unit', Unit);
+export default mongoose.models.Unit ?? mongoose.model<UnitDocument>('Unit', Unit);

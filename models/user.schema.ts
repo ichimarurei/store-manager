@@ -23,4 +23,4 @@ export interface UserDocument extends Document {
     active?: boolean;
 }
 
-export default mongoose.models.User || mongoose.model<UserDocument>('User', User);
+export default mongoose.models.User ?? mongoose.model<UserDocument>('User', User);

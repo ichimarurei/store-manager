@@ -24,4 +24,4 @@ export interface ProductDocument extends Document {
     author: IAuthor;
 }
 
-export default mongoose.models.Product || mongoose.model<ProductDocument>('Product', Product);
+export default mongoose.models.Product ?? mongoose.model<ProductDocument>('Product', Product);
