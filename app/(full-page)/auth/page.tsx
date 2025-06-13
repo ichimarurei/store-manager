@@ -4,6 +4,7 @@ import { LayoutContext } from '@/layout/context/layoutcontext';
 import { getAppInfo } from '@/lib/client.action';
 import { useStateStore } from '@/state/store';
 import { signIn, useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
@@ -135,10 +136,13 @@ const LoginPage = () => {
 
                                 {showInstallLink && (
                                     <div className="flex align-items-center justify-content-between mb-5 gap-5">
-                                        <a
+                                        <Link
+                                            href={'#'}
                                             className="font-medium no-underline ml-2 text-right cursor-pointer"
                                             style={{ color: 'var(--primary-color)' }}
-                                            onClick={() => {
+                                            onClick={(e) => {
+                                                e.preventDefault();
+
                                                 if (prompt) {
                                                     prompt.prompt();
                                                     prompt.useChoice.then((_: any) => {
@@ -148,7 +152,7 @@ const LoginPage = () => {
                                             }}
                                         >
                                             Pasang sebagai Web App
-                                        </a>
+                                        </Link>
                                     </div>
                                 )}
 
