@@ -4,7 +4,7 @@ import { createHash } from 'crypto';
 import { NextRequest } from 'next/server';
 
 export async function POST(req: NextRequest) {
-    let response: Response = Response.json({ error: 'Unprocessable operation!' }, { status: 422 });
+    let response: Response;
     let signed = false;
 
     try {
