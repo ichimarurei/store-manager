@@ -1,5 +1,5 @@
 import SupplierMiniForm from '@/component/supplier/form.mini';
-import { handleFailedSave, toaster } from '@/lib/client.action';
+import { handleFailedSave, isRestricted, toaster } from '@/lib/client.action';
 import { ReceiptDocument } from '@/models/receipt.schema';
 import { DropdownItem, SubmitResponse } from '@/types/app';
 import dayjs from 'dayjs';
@@ -70,7 +70,7 @@ const InvoiceForm = ({ mode, record, products, doSubmit }: { mode: 'add' | 'edit
     const [suppliers, setSuppliers] = useState<DropdownItem[]>([]);
     const [author, setAuthor] = useState<any>();
     const [visible, setVisible] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [locking, setLocking] = useState(false);
     const toast = useRef<Toast | null>(null);
     const { data: session } = useSession();
     const router = useRouter();
@@ -79,7 +79,7 @@ const InvoiceForm = ({ mode, record, products, doSubmit }: { mode: 'add' | 'edit
         if (submitted.saved) {
             toaster(toast.current, [{ severity: 'success', summary: 'Berhasil simpan', detail: 'Data berhasil disimpan di Sistem' }], 'receipt');
         } else {
-            setLoading(false);
+            setLocking(false);
             handleFailedSave(toast.current, submitted.notices);
         }
     };
@@ -96,9 +96,9 @@ const InvoiceForm = ({ mode, record, products, doSubmit }: { mode: 'add' | 'edit
     const getSuppliers = async () => setSuppliers(await fetchSuppliers());
 
     const submitAction = async () => {
-        if (!loading) {
+        if (!locking) {
             toast.current?.show({ severity: 'info', summary: 'Menyimpan', detail: 'Memproses penyimpanan data barang masuk ...' });
-            setLoading(true);
+            setLocking(true);
             await doAction();
         }
     };
@@ -116,6 +116,13 @@ const InvoiceForm = ({ mode, record, products, doSubmit }: { mode: 'add' | 'edit
             setSupplier({ code: (record.supplier as any)?._id, name: (record.supplier as any)?.name });
         }
     }, [record]);
+
+    useEffect(() => {
+        if (mode === 'edit') {
+            setLocking(isRestricted(session)?.disabled); // only Super Admin have access to edit receipt
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <div className="card">
@@ -158,7 +165,7 @@ const InvoiceForm = ({ mode, record, products, doSubmit }: { mode: 'add' | 'edit
             </div>
             <div className="flex justify-content-between flex-wrap">
                 <Button label="Batal" icon="pi pi-times" severity="info" onClick={() => router.replace('/receipt')} />
-                <Button label="Simpan" icon="pi pi-check" className="form-action-button" disabled={loading} onClick={async () => await submitAction()} />
+                <Button label="Simpan" icon="pi pi-check" className="form-action-button" disabled={locking} onClick={async () => await submitAction()} />
             </div>
             <Sidebar visible={visible} position="right" className="w-full md:w-25rem" onHide={() => setVisible(false)}>
                 <h2>Supplier Baru</h2>
