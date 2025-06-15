@@ -34,13 +34,13 @@ export const create = async (params: any): Promise<ReceiptDocument | null> => {
             await handshakeDB();
             const payload = await buildCreateData(params);
             saved = await receiptSchema.create(payload);
+
+            if (saved && params?.syncStock) {
+                await syncStockByIds(params.products.map(({ product }: any) => String(product)));
+            }
         }
     } catch (_) {
         console.error(_);
-    }
-
-    if (saved) {
-        await syncStockByIds(params.products.map(({ product }: any) => String(product)));
     }
 
     return saved;

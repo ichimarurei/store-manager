@@ -86,20 +86,24 @@ const InvoiceForm = ({ mode, record, products, doSubmit }: { mode: 'add' | 'edit
 
     const buildBasePayload = () => ({ products, reference, date, supplier: supplier?.code ?? suppliers[0].code, operator: session?.user?.name });
 
-    const generatePayload = () => ({ ...buildBasePayload(), ...(mode === 'edit' && { _id: record?._id, author: { ...author, created: { time: dayjs(author?.created?.time).toDate(), by: author.created?.by?._id } } }) });
+    const generatePayload = (isSyncStock: boolean) => ({
+        ...buildBasePayload(),
+        ...(isSyncStock && { syncStock: true }),
+        ...(mode === 'edit' && { _id: record?._id, author: { ...author, created: { time: dayjs(author?.created?.time).toDate(), by: author.created?.by?._id } } })
+    });
 
-    const doAction = async () => {
-        const response = await doSubmit(generatePayload(), `${record?._id ?? ''}`);
+    const doAction = async (isSyncStock: boolean) => {
+        const response = await doSubmit(generatePayload(isSyncStock), `${record?._id ?? ''}`);
         handleSubmitResponse(response);
     };
 
     const getSuppliers = async () => setSuppliers(await fetchSuppliers());
 
-    const submitAction = async () => {
+    const submitAction = async (isSyncStock?: boolean) => {
         if (!locking) {
             toast.current?.show({ severity: 'info', summary: 'Menyimpan', detail: 'Memproses penyimpanan data barang masuk ...' });
             setLocking(true);
-            await doAction();
+            await doAction(isSyncStock ?? false);
         }
     };
 
@@ -163,10 +167,20 @@ const InvoiceForm = ({ mode, record, products, doSubmit }: { mode: 'add' | 'edit
                     />
                 </div>
             </div>
-            <div className="flex justify-content-between flex-wrap">
+            <div className="flex justify-content-between flex-wrap gap-field-parent">
                 <Button label="Batal" icon="pi pi-times" severity="info" onClick={() => router.replace('/receipt')} />
                 <Button label="Simpan" icon="pi pi-check" className="form-action-button" disabled={locking} onClick={async () => await submitAction()} />
             </div>
+
+            {isRestricted(session)?.visible && (
+                <>
+                    <hr />
+                    <div className="p-fluid formgrid grid gap-field-parent">
+                        <Button label="Simpan & Terima" severity="success" icon="pi pi-lock" className="form-action-button" disabled={locking} onClick={async () => await submitAction(true)} />
+                    </div>
+                </>
+            )}
+
             <Sidebar visible={visible} position="right" className="w-full md:w-25rem" onHide={() => setVisible(false)}>
                 <h2>Supplier Baru</h2>
                 <SupplierMiniForm toast={toast.current} setVisible={setVisible} doSubmit={doSubmitSupplier} reload={getSuppliers} />
