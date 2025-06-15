@@ -33,13 +33,13 @@ export const update = async (params: any): Promise<ReceiptDocument | null> => {
             await handshakeDB();
             const payload = await buildUpdateData(params);
             saved = await receiptSchema.findOneAndUpdate({ _id: params._id }, payload, { new: true, lean: true }).lean<ReceiptDocument>();
+
+            if (saved && params?.syncStock) {
+                await syncStockByIds(params.products.map(({ product }: any) => String(product)));
+            }
         }
     } catch (_) {
         console.error(_);
-    }
-
-    if (saved) {
-        await syncStockByIds(params.products.map(({ product }: any) => String(product)));
     }
 
     return saved;
