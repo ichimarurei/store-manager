@@ -16,7 +16,7 @@
     "dependencies": {
         "@types/node": "^22.15.2",
         "@types/react": "18.2.12",
-        "@types/react-dom": "18.2.5",
+        "@types/react-dom": "18.3.7",
         "@vercel/analytics": "^1.5.0",
         "chart.js": "4.2.1",
         "cloudinary": "^2.6.1",
