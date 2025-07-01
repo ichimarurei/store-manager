@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
-import { RenderHeader } from './header';
+import { InventoryHeader } from '../inventory.header';
 
 dayjs.locale('id');
 
@@ -27,11 +27,13 @@ export const TableByReceipt = ({ list, loading, filters, globalFilterValue, onGl
     return (
         <DataTable
             className="p-datatable-gridlines"
-            header={<RenderHeader modePreview="faktur" globalFilterValue={globalFilterValue} onGlobalFilterChange={onGlobalFilterChange} dateFilter={dateFilter} setDateFilter={setDateFilter} />}
+            header={<InventoryHeader addUrl="/receipt/baru" globalFilterValue={globalFilterValue} onGlobalFilterChange={onGlobalFilterChange} dateFilter={dateFilter} setDateFilter={setDateFilter} />}
             loading={loading}
             filters={filters}
             value={list}
             rows={10}
+            stateStorage="local"
+            stateKey="receipt-invoice-table"
             paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
             currentPageReportTemplate="Menampilkan {first} - {last} , dari total {totalRecords} data"
             dataKey="id"

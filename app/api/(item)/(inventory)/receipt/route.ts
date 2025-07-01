@@ -4,6 +4,8 @@ import receiptSchema, { ReceiptDocument } from '@/models/receipt.schema';
 import { create } from '@/mutations/item/inventory/receipt/create';
 import { NextRequest } from 'next/server';
 
+export const revalidate = 60; // seconds
+
 export async function GET(_: NextRequest) {
     let response: Response;
 
@@ -28,7 +30,14 @@ export async function GET(_: NextRequest) {
             .populate({ path: 'author.edited.by', select: '-__v' })
             .populate({ path: 'author.deleted.by', select: '-__v' })
             .lean<ReceiptDocument[]>();
-        response = Response.json(items, { status: 200 });
+        // Filter out products where product population failed (is null)
+        response = Response.json(
+            items.map((item) => ({
+                ...item,
+                products: item.products.filter(({ product }) => product !== null)
+            })),
+            { status: 200, headers: { 'Cache-Control': 'public, max-age=60, s-maxage=120, stale-while-revalidate=180' } }
+        );
     } catch (error) {
         response = createErrorResponse(error);
     }

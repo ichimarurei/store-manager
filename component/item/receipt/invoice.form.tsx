@@ -84,26 +84,25 @@ const InvoiceForm = ({ mode, record, products, doSubmit }: { mode: 'add' | 'edit
         }
     };
 
-    const buildBasePayload = () => ({ products, reference, date, supplier: supplier?.code ?? suppliers[0].code, operator: session?.user?.name });
+    const buildBasePayload = () => ({ products, reference, date, supplier: supplier?.code ?? null, operator: session?.user?.name });
 
-    const generatePayload = (isSyncStock: boolean) => ({
+    const generatePayload = () => ({
         ...buildBasePayload(),
-        ...(isSyncStock && { syncStock: true }),
         ...(mode === 'edit' && { _id: record?._id, author: { ...author, created: { time: dayjs(author?.created?.time).toDate(), by: author.created?.by?._id } } })
     });
 
-    const doAction = async (isSyncStock: boolean) => {
-        const response = await doSubmit(generatePayload(isSyncStock), `${record?._id ?? ''}`);
+    const doAction = async () => {
+        const response = await doSubmit(generatePayload(), `${record?._id ?? ''}`);
         handleSubmitResponse(response);
     };
 
     const getSuppliers = async () => setSuppliers(await fetchSuppliers());
 
-    const submitAction = async (isSyncStock?: boolean) => {
+    const submitAction = async () => {
         if (!locking) {
             toast.current?.show({ severity: 'info', summary: 'Menyimpan', detail: 'Memproses penyimpanan data barang masuk ...' });
             setLocking(true);
-            await doAction(isSyncStock ?? false);
+            await doAction();
         }
     };
 
@@ -152,7 +151,7 @@ const InvoiceForm = ({ mode, record, products, doSubmit }: { mode: 'add' | 'edit
                     <Dropdown
                         filter
                         id="supplier"
-                        value={supplier ?? suppliers[0]}
+                        value={supplier}
                         options={suppliers}
                         optionLabel="name"
                         placeholder="Supplier/Pemasok"
@@ -171,15 +170,6 @@ const InvoiceForm = ({ mode, record, products, doSubmit }: { mode: 'add' | 'edit
                 <Button label="Batal" icon="pi pi-times" severity="info" onClick={() => router.replace('/receipt')} />
                 <Button label="Simpan" icon="pi pi-check" className="form-action-button" disabled={locking} onClick={async () => await submitAction()} />
             </div>
-
-            {isRestricted(session)?.visible && (
-                <>
-                    <hr />
-                    <div className="p-fluid formgrid grid gap-field-parent">
-                        <Button label="Simpan & Terima" severity="success" icon="pi pi-lock" className="form-action-button" disabled={locking} onClick={async () => await submitAction(true)} />
-                    </div>
-                </>
-            )}
 
             <Sidebar visible={visible} position="right" className="w-full md:w-25rem" onHide={() => setVisible(false)}>
                 <h2>Supplier Baru</h2>
