@@ -2,6 +2,7 @@
 
 import { TableByReceipt } from '@/component/item/receipt/invoice.table';
 import { TableByItem } from '@/component/item/receipt/item.table';
+import { calculateSumCost } from '@/lib/client.action';
 import { ReceiptDocument } from '@/models/receipt.schema';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
@@ -12,22 +13,6 @@ import { Menu } from 'primereact/menu';
 import React, { useEffect, useRef, useState } from 'react';
 
 dayjs.extend(isBetween);
-
-const calculateSumCost = (products: any[]) => {
-    let sumCost = 0;
-
-    products.forEach((item) => {
-        let price = item?.cost ?? 0;
-
-        if (item?.discount > 0) {
-            price = price - (item?.discount / 100) * price;
-        }
-
-        sumCost += price;
-    });
-
-    return sumCost;
-};
 
 const processInvoiceItem = ({ date, author, supplier, reference, products, _id }: ReceiptDocument) => {
     const datetime = date || author.created?.time || null;
@@ -107,7 +92,7 @@ const ReceiptList = () => {
     useEffect(() => {
         const fetching = async () => {
             try {
-                const response = await fetch('/api/receipt', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
+                const response = await fetch('/api/receipt', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 }, cache: 'reload' });
                 const result: ReceiptDocument[] = await response.json();
                 setList(processReceiptData(result, dateFilter));
             } catch (_) {

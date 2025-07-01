@@ -11,6 +11,8 @@ const Product: Schema = new Schema({
     bundle: { type: Bundling, required: false, default: null, _id: false },
     images: { type: [String], required: false, default: '' },
     inventory: { type: Number, required: false, default: 0 },
+    initialCost: { type: Number, required: false, default: 0 }, // from old system
+    cost: { type: [Number], required: false, default: [0, 0] },
     author: { type: Author, required: true, _id: false }
 });
 
@@ -21,6 +23,8 @@ export interface ProductDocument extends Document {
     bundle?: IBundling | null;
     images?: string[];
     inventory?: number;
+    cost?: number[];
+    initialCost?: number; // from old system
     author: IAuthor;
 }
 

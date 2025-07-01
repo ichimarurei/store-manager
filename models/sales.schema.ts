@@ -29,8 +29,7 @@ const Item: Schema = new Schema(
         salesQty: { type: ItemQty, required: true, _id: false },
         bonusQty: { type: ItemQty, required: false, default: null, _id: false },
         price: { type: Number, required: true },
-        discount: { type: Number, required: false, default: 0 },
-        reference: { type: ItemReference, required: true, _id: false }
+        discount: { type: Number, required: false, default: 0 }
     },
     { _id: false }
 );
@@ -53,26 +52,17 @@ interface IItemQty {
     qty: number;
 }
 
-interface IItemReference {
-    discount?: number;
-    unitQty: IItemQty;
-    cost: number;
-    sum: number;
-    profit: number;
-}
-
 interface IItem {
     product: Types.ObjectId;
     salesQty: IItemQty;
     bonusQty?: IItemQty;
     price: number;
     discount?: number;
-    reference: IItemReference;
 }
 
 export interface SalesDocument extends Document {
     reference?: string;
-    customer?: Types.ObjectId;
+    customer?: Types.ObjectId | null;
     products: IItem[];
     subPrice: number;
     finalPrice: number;

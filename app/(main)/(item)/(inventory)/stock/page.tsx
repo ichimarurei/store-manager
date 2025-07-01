@@ -1,6 +1,6 @@
 'use client';
 
-import { getDefaultProduct } from '@/lib/client.action';
+import { getDefaultProduct, processRangePrice } from '@/lib/client.action';
 import { doSyncStock } from '@/lib/server.action';
 import { ProductDocument } from '@/models/product.schema';
 import { FilterMatchMode } from 'primereact/api';
@@ -27,6 +27,7 @@ const ProductList = () => {
     );
     const stockBodyTemplate = (rowData: any) => (rowData?.inventory ? `${Intl.NumberFormat('id-ID', { style: 'decimal' }).format(rowData.inventory)} ${rowData?.unit?.name ?? ''}` : '');
     const bundleBodyTemplate = (rowData: any) => (rowData?.bundle?.node && rowData?.bundle?.contain ? `${rowData.bundle.node?.amount} ${rowData.bundle.node?.unit?.name} = ${rowData.bundle.contain?.amount} ${rowData.bundle.contain?.unit?.name}` : '');
+    const costBodyTemplate = ({ cost }: ProductDocument) => processRangePrice(cost ?? []);
 
     const initFilters = () => {
         setGlobalFilterValue('');
@@ -114,8 +115,9 @@ const ProductList = () => {
                         <Column header="Nama" filterField="name" body={nameBodyTemplate} />
                         <Column header="Kategori" field="category.name" />
                         <Column header="Satuan" field="unit.name" />
-                        <Column header="Stok" filterField="inventory" body={stockBodyTemplate} />
                         <Column header="Bundel" body={bundleBodyTemplate} />
+                        <Column header="Stok" filterField="inventory" body={stockBodyTemplate} />
+                        <Column header="Modal" filterField="cost" body={costBodyTemplate} />
                     </DataTable>
                 </div>
             </div>

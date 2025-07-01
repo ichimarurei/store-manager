@@ -35,7 +35,7 @@ export const create = async (params: any): Promise<ReceiptDocument | null> => {
             const payload = await buildCreateData(params);
             saved = await receiptSchema.create(payload);
 
-            if (saved && params?.syncStock) {
+            if (saved) {
                 await syncStockByIds(params.products.map(({ product }: any) => String(product)));
             }
         }

@@ -77,7 +77,7 @@ const fetchProducts = async (): Promise<any[]> => {
     return products;
 };
 
-const parserCart = (carts: any[]) => carts.map(({ product, qty, unit, cost, discount }) => ({ qty, cost, discount, unit, item: product, label: product?.name, key: uuid() }));
+const parserCart = (carts: any[]) => carts.filter(({ product }) => product !== null).map(({ product, qty, unit, cost, discount }) => ({ qty, cost, discount, unit, item: product, label: product?.name, key: uuid() }));
 
 const Contents = ({ record }: { record: any }) => {
     const [list, setList] = useState<ProductDocument[]>([]);

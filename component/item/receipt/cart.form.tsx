@@ -20,12 +20,12 @@ const PriceList = ({ cost, discount = 0 }: { cost: number; discount?: number }) 
 const CartForm = ({ selected, setSelected }: { selected: any[]; setSelected: (value: any[]) => void }) => {
     const renderItem = (product: any) => (
         <div className="flex flex-column flex-wrap gap-2 mb-5">
-            <span className="font-bold">{product.item.name}</span>
+            <span className="font-bold">{product?.item?.name ?? ''}</span>
             <div className="flex align-items-center gap-2">
                 <span className="font-bold text-900">{product?.qty ?? 0}</span>
-                <span>{pickUnitDetail(product.item, product.unit)?.name}</span>
+                <span>{pickUnitDetail(product?.item, product?.unit)?.name ?? ''}</span>
             </div>
-            <PriceList cost={product?.cost} discount={product?.discount} />
+            <PriceList cost={product?.cost ?? 0} discount={product?.discount ?? 0} />
             <ItemEditor product={product} selected={selected} setSelected={setSelected} />
         </div>
     );

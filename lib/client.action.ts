@@ -3,6 +3,7 @@
 import { InfoDocument } from '@/models/info.schema';
 import { ProductDocument } from '@/models/product.schema';
 import { createHash } from 'crypto';
+import { isEmpty, isNaN } from 'lodash';
 import { Toast } from 'primereact/toast';
 
 const getDefaultImage = (name: string) => `/storage/image/global/${name}.jpg`;
@@ -18,19 +19,25 @@ export const getDefaultPhoto = () => getDefaultImage('photo');
 export const getDefaultProduct = () => getDefaultImage('product');
 
 export const formatRp = (value = 0, discount = 0) => {
+    let rpString = 'Rp 0';
+
     try {
-        let final = value;
+        if (!isNaN(value)) {
+            let final = value;
 
-        if (discount > 0) {
-            final = value - (discount / 100) * value;
+            if (discount > 0) {
+                final = value - (discount / 100) * value;
+            }
+
+            rpString = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(final).replace(',00', '').replace('Rp', 'Rp ');
+        } else {
+            rpString = 'Rp 0.00';
         }
-
-        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(final).replace(',00', '').replace('Rp', 'Rp ');
     } catch (_) {
         console.error(_);
-
-        return 'Rp 0';
     }
+
+    return rpString;
 };
 
 export const toaster = (toast: Toast | null, messages: { severity: 'success' | 'info' | 'warn' | 'error'; summary: string; detail: string }[], reload?: string) => {
@@ -76,7 +83,7 @@ export const getAppInfo = async (): Promise<InfoDocument | null> => {
 };
 
 export const pickUnitDetail = (item: any, unit: string) => {
-    let unitDetail = getUnitDetail(item.unit, unit);
+    let unitDetail = getUnitDetail(item?.unit, unit);
     unitDetail ??= getUnitDetail(item?.bundle?.node?.unit, unit);
 
     return unitDetail;
@@ -101,4 +108,38 @@ export const handleFailedSave = (toast: Toast | null, notices: string[]) => {
     } else {
         toaster(toast, [{ severity: 'warn', summary: 'Gagal simpan!', detail: 'Data tidak dapat disimpan oleh Sistem' }]);
     }
+};
+
+export const calculateSumCost = (products: any[]) => {
+    let sumCost = 0;
+
+    products.forEach((item) => {
+        let amount = item?.cost ?? item?.price ?? 0;
+
+        if (item?.discount > 0) {
+            amount = amount - (item?.discount / 100) * amount;
+        }
+
+        sumCost += amount;
+    });
+
+    return sumCost;
+};
+
+export const processRangePrice = (cost: number[]) => {
+    let costString = '';
+
+    if (!isEmpty(cost)) {
+        costString = cost?.[1] ? `${formatRp(cost[0])} - ${formatRp(cost[1])}` : formatRp(cost?.[0] || 0);
+
+        if (cost[0] === cost[1]) {
+            costString = formatRp(cost[0]);
+        }
+
+        if (cost[0] === 0) {
+            costString = formatRp(cost[1]);
+        }
+    }
+
+    return costString;
 };

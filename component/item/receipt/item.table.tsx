@@ -8,7 +8,7 @@ import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Image } from 'primereact/image';
-import { RenderHeader } from './header';
+import { InventoryHeader } from '../inventory.header';
 
 dayjs.locale('id');
 
@@ -30,11 +30,13 @@ export const TableByItem = ({ list, loading, filters, globalFilterValue, onGloba
     return (
         <DataTable
             className="p-datatable-gridlines"
-            header={<RenderHeader modePreview="produk" globalFilterValue={globalFilterValue} onGlobalFilterChange={onGlobalFilterChange} dateFilter={dateFilter} setDateFilter={setDateFilter} />}
+            header={<InventoryHeader addUrl="/receipt/baru" globalFilterValue={globalFilterValue} onGlobalFilterChange={onGlobalFilterChange} dateFilter={dateFilter} setDateFilter={setDateFilter} />}
             loading={loading}
             filters={filters}
             value={list}
             rows={10}
+            stateStorage="local"
+            stateKey="receipt-item-table"
             paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
             currentPageReportTemplate="Menampilkan {first} - {last} , dari total {totalRecords} data"
             dataKey="id"
@@ -48,9 +50,9 @@ export const TableByItem = ({ list, loading, filters, globalFilterValue, onGloba
             <Column header="Tanggal" filterField="date" body={dateBodyTemplate} />
             <Column header="Produk" filterField="product.name" body={nameBodyTemplate} />
             <Column header="Kategori" field="product.category.name" />
-            <Column header="Biaya" filterField="cost" body={costBodyTemplate} />
-            <Column header="Diskon" filterField="discount" body={discountBodyTemplate} />
             <Column header="Qty" filterField="qty" body={qtyBodyTemplate} />
+            <Column header="Diskon" filterField="discount" body={discountBodyTemplate} />
+            <Column header="Biaya" filterField="cost" body={costBodyTemplate} />
             <Column header="" body={editBodyTemplate} className="filter-action-button" />
         </DataTable>
     );

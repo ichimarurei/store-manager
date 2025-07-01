@@ -34,7 +34,7 @@ export const update = async (params: any): Promise<ReceiptDocument | null> => {
             const payload = await buildUpdateData(params);
             saved = await receiptSchema.findOneAndUpdate({ _id: params._id }, payload, { new: true, lean: true }).lean<ReceiptDocument>();
 
-            if (saved && params?.syncStock) {
+            if (saved) {
                 await syncStockByIds(params.products.map(({ product }: any) => String(product)));
             }
         }

@@ -57,7 +57,7 @@ const ProductList = () => {
     useEffect(() => {
         const fetching = async () => {
             try {
-                const response = await fetch('/api/product', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
+                const response = await fetch('/api/product', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 }, cache: 'reload' });
                 setList(await response.json());
             } catch (_) {
                 console.error(_);

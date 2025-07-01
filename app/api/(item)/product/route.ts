@@ -4,6 +4,8 @@ import productSchema, { ProductDocument } from '@/models/product.schema';
 import { create } from '@/mutations/item/product/create';
 import { NextRequest } from 'next/server';
 
+export const revalidate = 60; // seconds
+
 export async function GET(_: NextRequest) {
     let response: Response;
 
@@ -21,7 +23,7 @@ export async function GET(_: NextRequest) {
             .populate({ path: 'author.edited.by', select: '-__v' })
             .populate({ path: 'author.deleted.by', select: '-__v' })
             .lean<ProductDocument[]>();
-        response = Response.json(items, { status: 200 });
+        response = Response.json(items, { status: 200, headers: { 'Cache-Control': 'public, max-age=60, s-maxage=120, stale-while-revalidate=180' } });
     } catch (error) {
         response = createErrorResponse(error);
     }
