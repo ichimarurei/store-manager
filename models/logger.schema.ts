@@ -7,7 +7,7 @@ const Logger: Schema = new Schema({
 });
 
 export interface LoggerDocument extends Document {
-    key: string;
+    key: Types.ObjectId;
     log: any;
 }
 
