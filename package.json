@@ -7,7 +7,7 @@
         "email": "jms21maru@gmail.com"
     },
     "scripts": {
-        "dev": "pnpm install && pnpm format && pnpm lint && next dev",
+        "dev": "npm install && npm run format && npm run lint && next dev",
         "build": "next build",
         "start": "next start",
         "format": "prettier --check --write \"{app,demo,layout,types}/**/*.{js,ts,tsx,d.ts}\"",
