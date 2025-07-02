@@ -1,4 +1,5 @@
 import handshakeDB from '@/lib/mongo';
+import loggerSchema from '@/models/logger.schema';
 import productSchema, { ProductDocument } from '@/models/product.schema';
 import receiptSchema, { ReceiptDocument } from '@/models/receipt.schema';
 import salesSchema, { SalesDocument } from '@/models/sales.schema';
@@ -94,6 +95,7 @@ const processUpdating = async (items: ProductDocument[], receipts: ReceiptDocume
             cost.push(0);
         }
 
+        await loggerSchema.findOneAndUpdate({ key }, { log: { inventory: inventories?.[key] ?? 0, cost }, key }, { new: true, lean: true, upsert: true });
         await productSchema.findOneAndUpdate({ _id: key }, { inventory: inventories?.[key] ?? 0, cost }, { new: true, lean: true }).lean<ProductDocument>();
     }
 };
