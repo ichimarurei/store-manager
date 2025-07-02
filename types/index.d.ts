@@ -1,26 +1,8 @@
 import mongoose from 'mongoose';
 import { Session } from 'next-auth';
 import { ReactNode } from 'react';
-import { AppMailProps, AppMailReplyProps, AppMailSidebarItem, ChartDataState, ChartOptionsState, CustomEvent, Demo, LayoutType, SortOrderType } from './app';
-import {
-    AppBreadcrumbProps,
-    AppMenuItem,
-    AppMenuItemProps,
-    AppTopbarRef,
-    Breadcrumb,
-    BreadcrumbItem,
-    ChatContextProps,
-    LayoutConfig,
-    LayoutContextProps,
-    LayoutState,
-    MailContextProps,
-    MenuContextProps,
-    MenuModel,
-    MenuProps,
-    NodeRef,
-    Page,
-    TaskContextProps
-} from './layout';
+import { AppMailProps, AppMailReplyProps, AppMailSidebarItem, ChartDataState, ChartOptionsState, CustomEvent, LayoutType, SortOrderType, WebApp } from './app';
+import { AppBreadcrumbProps, AppMenuItem, AppMenuItemProps, AppTopbarRef, Breadcrumb, BreadcrumbItem, LayoutConfig, LayoutContextProps, LayoutState, MenuContextProps, MenuModel, MenuProps, NodeRef } from './layout';
 
 type ChildContainerProps = {
     children: ReactNode;
@@ -40,22 +22,18 @@ export type {
     BreadcrumbItem,
     ChartDataState,
     ChartOptionsState,
-    ChatContextProps,
     ChildContainerProps,
     CustomEvent,
-    Demo,
     LayoutConfig,
     LayoutContextProps,
     LayoutState,
     LayoutType,
-    MailContextProps,
     MenuContextProps,
     MenuModel,
     MenuProps,
     NodeRef,
-    Page,
     SortOrderType,
-    TaskContextProps
+    WebApp
 };
 
 export interface MongooseCache {

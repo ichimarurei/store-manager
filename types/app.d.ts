@@ -43,7 +43,7 @@ export interface ChartOptionsState {
 }
 
 export interface AppMailProps {
-    mails: Demo.Mail[];
+    mails: WebApp.Mail[];
 }
 
 export interface AppMailSidebarItem {
@@ -55,7 +55,7 @@ export interface AppMailSidebarItem {
 }
 
 export interface AppMailReplyProps {
-    content: Demo.Mail | null;
+    content: WebApp.Mail | null;
     hide: () => void;
 }
 
@@ -174,7 +174,7 @@ declare namespace WebApp {
         price?: number;
         rating?: number;
         image?: string;
-        orders?: Demo.Customer[];
+        orders?: WebApp.Customer[];
         inventoryStatus?: string;
         representative: {
             name: string;
