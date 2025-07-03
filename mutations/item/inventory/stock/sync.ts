@@ -1,10 +1,11 @@
+'use server';
+
 import handshakeDB from '@/lib/mongo';
 import loggerSchema from '@/models/logger.schema';
 import productSchema, { ProductDocument } from '@/models/product.schema';
 import receiptSchema, { ReceiptDocument } from '@/models/receipt.schema';
 import salesSchema, { SalesDocument } from '@/models/sales.schema';
 import { isEmpty } from 'lodash';
-import { console } from 'node:inspector/promises';
 
 const isBundleUnitMatching = (item: ProductDocument, unit: string): boolean => (item?.bundle?.node ? String(item.bundle.node?.unit) === unit : false);
 
