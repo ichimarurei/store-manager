@@ -4,8 +4,6 @@ import receiptSchema, { ReceiptDocument } from '@/models/receipt.schema';
 import { create } from '@/mutations/item/inventory/receipt/create';
 import { NextRequest } from 'next/server';
 
-export const revalidate = 60; // seconds
-
 export async function GET(_: NextRequest) {
     let response: Response;
 
@@ -36,7 +34,7 @@ export async function GET(_: NextRequest) {
                 ...item,
                 products: item.products.filter(({ product }) => product !== null)
             })),
-            { status: 200, headers: { 'Cache-Control': 'public, max-age=60, s-maxage=120, stale-while-revalidate=180' } }
+            { status: 200 }
         );
     } catch (error) {
         response = createErrorResponse(error);

@@ -2,6 +2,7 @@
 
 import { getDefaultProduct } from '@/lib/client.action';
 import { ProductDocument } from '@/models/product.schema';
+import { getList } from '@/queries/get';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FilterMatchMode } from 'primereact/api';
@@ -56,13 +57,7 @@ const ProductList = () => {
 
     useEffect(() => {
         const fetching = async () => {
-            try {
-                const response = await fetch('/api/product', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 }, cache: 'reload' });
-                setList(await response.json());
-            } catch (_) {
-                console.error(_);
-            }
-
+            setList(await getList('product'));
             setLoading(false);
             initFilters();
         };

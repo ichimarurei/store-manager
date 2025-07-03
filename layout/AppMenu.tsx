@@ -13,7 +13,7 @@ const AppMenu = () => {
             label: 'Dasbor',
             items: [
                 { label: 'Beranda', icon: 'pi pi-fw pi-home', to: '/dashboard' },
-                { label: 'Panduan', icon: 'pi pi-fw pi-question', to: '/' }
+                { label: 'Panduan', icon: 'pi pi-fw pi-question', to: '/guide' }
             ]
         },
         {
@@ -45,7 +45,7 @@ const AppMenu = () => {
             label: 'Aplikasi',
             items: [
                 { label: 'Profil Usaha', icon: 'pi pi-fw pi-building', to: '/info', disabled, visible },
-                { label: 'Hutang', icon: 'pi pi-fw pi-credit-card', to: '/' },
+                { label: 'Hutang', icon: 'pi pi-fw pi-credit-card', to: '/debt' },
                 { label: 'Logout', icon: 'pi pi-fw pi-sign-out', to: '/logout' }
             ]
         }

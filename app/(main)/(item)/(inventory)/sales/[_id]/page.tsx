@@ -5,6 +5,8 @@ import InvoiceForm from '@/component/item/sales/invoice.form';
 import ItemForm from '@/component/item/sales/item.form';
 import { toaster } from '@/lib/client.action';
 import { ProductDocument } from '@/models/product.schema';
+import { submitting } from '@/mutations/submit';
+import { getData, getList } from '@/queries/get';
 import { orderBy } from 'lodash';
 import { Skeleton } from 'primereact/skeleton';
 import { Toast } from 'primereact/toast';
@@ -60,17 +62,7 @@ const doSubmit = async (record: any, _id?: string) => {
     const validated = validator.safeParse(payloadSchema, record, { abortPipeEarly: true });
 
     if (validated.success) {
-        try {
-            const response = await fetch(_id ? `/api/sales/${_id}` : '/api/sales', {
-                method: !_id ? 'POST' : 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(record)
-            });
-            const result = await response.json();
-            saved = result?.saved ?? false;
-        } catch (_) {
-            console.error(_);
-        }
+        saved = await submitting('sales', record, _id);
     } else {
         notices = validated.issues.map(({ message }) => message);
     }
@@ -82,8 +74,7 @@ const fetchProducts = async (): Promise<any[]> => {
     const products: ProductDocument[] = [];
 
     try {
-        const response = await fetch('/api/stock', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
-        const list = await response.json();
+        const list = await getList('stock');
         products.push(...list);
     } catch (_) {
         console.error(_);
@@ -148,8 +139,7 @@ const SalesPanel = ({ params }: { params: Promise<{ _id: string }> }) => {
                 const { _id } = await params;
 
                 if (_id && _id !== 'baru') {
-                    const response = await fetch(`/api/sales/${_id}`, { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
-                    setRecord(await response.json());
+                    setRecord(await getData('sales', _id));
                 }
 
                 setLoading(false);

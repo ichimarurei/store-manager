@@ -4,6 +4,7 @@ import { TableByReceipt } from '@/component/item/receipt/invoice.table';
 import { TableByItem } from '@/component/item/receipt/item.table';
 import { calculateSumCost } from '@/lib/client.action';
 import { ReceiptDocument } from '@/models/receipt.schema';
+import { getList } from '@/queries/get';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import { FilterMatchMode } from 'primereact/api';
@@ -92,8 +93,7 @@ const ReceiptList = () => {
     useEffect(() => {
         const fetching = async () => {
             try {
-                const response = await fetch('/api/receipt', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 }, cache: 'reload' });
-                const result: ReceiptDocument[] = await response.json();
+                const result: ReceiptDocument[] = await getList('receipt');
                 setList(processReceiptData(result, dateFilter));
             } catch (_) {
                 console.error(_);

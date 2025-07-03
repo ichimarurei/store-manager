@@ -2,6 +2,7 @@
 
 import { InfoDocument } from '@/models/info.schema';
 import { ProductDocument } from '@/models/product.schema';
+import { getDataNoParam } from '@/queries/get';
 import { createHash } from 'crypto';
 import { isEmpty, isNaN } from 'lodash';
 import { Toast } from 'primereact/toast';
@@ -69,18 +70,7 @@ export const isRestricted = (session?: any) => {
     return { disabled: restrict, visible: !restrict };
 };
 
-export const getAppInfo = async (): Promise<InfoDocument | null> => {
-    let info: InfoDocument | null = null;
-
-    try {
-        const response = await fetch('/api/info', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
-        info = await response.json();
-    } catch (_) {
-        console.error(_);
-    }
-
-    return info;
-};
+export const getAppInfo = async (): Promise<InfoDocument | null> => (await getDataNoParam('info')) ?? null;
 
 export const pickUnitDetail = (item: any, unit: string) => {
     let unitDetail = getUnitDetail(item?.unit, unit);

@@ -2,6 +2,8 @@
 
 import UnitForm from '@/component/item/unit/form';
 import { UnitDocument } from '@/models/unit.schema';
+import { submitting } from '@/mutations/submit';
+import { getList } from '@/queries/get';
 import Link from 'next/link';
 import { FilterMatchMode } from 'primereact/api';
 import { Button } from 'primereact/button';
@@ -33,23 +35,13 @@ const UnitList = () => {
         const validated = validator.safeParse(payloadSchema, record, { abortPipeEarly: true });
 
         if (validated.success) {
-            try {
-                const response = await fetch(_id ? `/api/unit/${_id}` : '/api/unit', {
-                    method: !_id ? 'POST' : 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(record)
-                });
-                const result = await response.json();
-                saved = result?.saved ?? false;
-            } catch (_) {
-                console.error(_);
+            saved = await submitting('unit', record, _id);
+
+            if (saved) {
+                await fetching();
             }
         } else {
             notices = validated.issues.map(({ message }) => message);
-        }
-
-        if (saved) {
-            await fetching();
         }
 
         return { saved, notices };
@@ -61,13 +53,7 @@ const UnitList = () => {
     };
 
     const fetching = useCallback(async () => {
-        try {
-            const response = await fetch('/api/unit', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
-            setList(await response.json());
-        } catch (_) {
-            console.error(_);
-        }
-
+        setList(await getList('unit'));
         setLoading(false);
         initFilters();
     }, []);

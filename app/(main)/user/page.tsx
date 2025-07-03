@@ -2,6 +2,7 @@
 
 import { getDefaultPhoto, isRestricted } from '@/lib/client.action';
 import { UserDocument } from '@/models/user.schema';
+import { getList } from '@/queries/get';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -59,13 +60,7 @@ const UserList = () => {
 
     useEffect(() => {
         const fetching = async () => {
-            try {
-                const response = await fetch('/api/user', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
-                setList(await response.json());
-            } catch (_) {
-                console.error(_);
-            }
-
+            setList(await getList('user'));
             setLoading(false);
             initFilters();
         };

@@ -1,6 +1,8 @@
 import CustomerMiniForm from '@/component/customer/form.mini';
 import { formatRp, handleFailedSave, isRestricted, toaster } from '@/lib/client.action';
 import { SalesDocument } from '@/models/sales.schema';
+import { submitting } from '@/mutations/submit';
+import { getList } from '@/queries/get';
 import { DropdownItem, SubmitResponse } from '@/types/app';
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
@@ -31,17 +33,7 @@ const doSubmitCustomer = async (record: any) => {
     const validated = validator.safeParse(payloadCustomer, record, { abortPipeEarly: true });
 
     if (validated.success) {
-        try {
-            const response = await fetch('/api/customer', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(record)
-            });
-            const result = await response.json();
-            saved = result?.saved ?? false;
-        } catch (_) {
-            console.error(_);
-        }
+        saved = await submitting('customer', record);
     } else {
         notices = validated.issues.map(({ message }) => message);
     }
@@ -53,8 +45,7 @@ const fetchCustomers = async () => {
     const customers: DropdownItem[] = [];
 
     try {
-        const response = await fetch('/api/customer', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
-        const list = await response.json();
+        const list = await getList('customer');
         customers.push(...list.map(({ _id, name }: any) => ({ name, code: _id })));
     } catch (_) {
         console.error(_);

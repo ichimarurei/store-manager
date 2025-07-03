@@ -9,6 +9,8 @@ import 'primeflex/primeflex.css';
 import 'primeicons/primeicons.css';
 import { PrimeReactProvider } from 'primereact/api';
 import 'primereact/resources/primereact.css';
+import { Suspense } from 'react';
+import LoadingPage from './loading';
 
 interface RootLayoutProps {
     children: React.ReactNode;
@@ -57,7 +59,9 @@ export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
                 </head>
                 <body>
                     <PrimeReactProvider>
-                        <LayoutProvider>{children}</LayoutProvider>
+                        <LayoutProvider>
+                            <Suspense fallback={<LoadingPage />}>{children}</Suspense>
+                        </LayoutProvider>
                     </PrimeReactProvider>
                 </body>
             </html>

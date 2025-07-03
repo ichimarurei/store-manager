@@ -1,6 +1,7 @@
 'use client';
 
 import { CustomerDocument } from '@/models/customer.schema';
+import { getList } from '@/queries/get';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FilterMatchMode } from 'primereact/api';
@@ -48,13 +49,7 @@ const CustomerList = () => {
 
     useEffect(() => {
         const fetching = async () => {
-            try {
-                const response = await fetch('/api/customer', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
-                setList(await response.json());
-            } catch (_) {
-                console.error(_);
-            }
-
+            setList(await getList('customer'));
             setLoading(false);
             initFilters();
         };
