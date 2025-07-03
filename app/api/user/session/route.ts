@@ -1,3 +1,5 @@
+'use server';
+
 import handshakeDB from '@/lib/mongo';
 import userSchema, { UserDocument } from '@/models/user.schema';
 import { createHash } from 'crypto';

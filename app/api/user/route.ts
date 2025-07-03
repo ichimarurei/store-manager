@@ -1,3 +1,5 @@
+'use server';
+
 import handshakeDB from '@/lib/mongo';
 import { createErrorResponse } from '@/lib/server.action';
 import userSchema, { UserDocument } from '@/models/user.schema';
