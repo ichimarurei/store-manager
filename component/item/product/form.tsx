@@ -1,6 +1,7 @@
 import { doCancelAction, getDefaultProduct, toaster } from '@/lib/client.action';
 import { IBundling } from '@/models/bundling';
 import { ProductDocument } from '@/models/product.schema';
+import { getList } from '@/queries/get';
 import { DropdownItem, SubmitResponse } from '@/types/app';
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
@@ -117,8 +118,7 @@ const ProductForm = ({ toast, mode, record, doSubmit }: { toast: Toast | null; m
     useEffect(() => {
         const fetching = async (fetchFor: 'category' | 'unit') => {
             try {
-                const response = await fetch(`/api/${fetchFor}`, { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
-                const result: any[] = await response.json();
+                const result: any[] = await getList(fetchFor);
 
                 if (fetchFor === 'category') {
                     setCategories(result.map(({ _id, name }) => ({ name, code: _id })));

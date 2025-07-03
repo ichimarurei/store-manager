@@ -2,6 +2,8 @@
 
 import CustomerForm from '@/component/customer/form';
 import { toaster } from '@/lib/client.action';
+import { submitting } from '@/mutations/submit';
+import { getData } from '@/queries/get';
 import { Skeleton } from 'primereact/skeleton';
 import { Toast } from 'primereact/toast';
 import { useEffect, useRef, useState } from 'react';
@@ -20,17 +22,7 @@ const doSubmit = async (record: any, _id?: string) => {
     const validated = validator.safeParse(payloadSchema, record, { abortPipeEarly: true });
 
     if (validated.success) {
-        try {
-            const response = await fetch(_id ? `/api/customer/${_id}` : '/api/customer', {
-                method: !_id ? 'POST' : 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(record)
-            });
-            const result = await response.json();
-            saved = result?.saved ?? false;
-        } catch (_) {
-            console.error(_);
-        }
+        saved = await submitting('customer', record, _id);
     } else {
         notices = validated.issues.map(({ message }) => message);
     }
@@ -50,8 +42,7 @@ const CustomerPage = ({ params }: { params: Promise<{ _id: string }> }) => {
                 const { _id } = await params;
 
                 if (_id && _id !== 'baru') {
-                    const response = await fetch(`/api/customer/${_id}`, { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
-                    setRecord(await response.json());
+                    setRecord(await getData('customer', _id));
                 }
 
                 setId(_id);

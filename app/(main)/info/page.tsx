@@ -2,6 +2,8 @@
 
 import InfoForm from '@/component/info/form';
 import { getDefaultLogo, isRestricted } from '@/lib/client.action';
+import { submitting } from '@/mutations/submit';
+import { getDataNoParam } from '@/queries/get';
 import '@/styles/_form.scss';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -26,17 +28,7 @@ const doSubmit = async (record: any) => {
     const validated = validator.safeParse(payloadSchema, record, { abortPipeEarly: true });
 
     if (validated.success) {
-        try {
-            const response = await fetch('/api/info', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(record)
-            });
-            const result = await response.json();
-            saved = result?.saved ?? false;
-        } catch (_) {
-            console.error(_);
-        }
+        saved = await submitting('info', record);
     } else {
         notices = validated.issues.map(({ message }) => message);
     }
@@ -64,8 +56,7 @@ const InfoPage = () => {
     useEffect(() => {
         const fetching = async () => {
             try {
-                const response = await fetch('/api/info', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
-                setRecord(await response.json());
+                setRecord(await getDataNoParam('info'));
                 setLoading(false);
             } catch (_) {
                 console.error(_);

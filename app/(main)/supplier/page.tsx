@@ -1,6 +1,7 @@
 'use client';
 
 import { SupplierDocument } from '@/models/supplier.schema';
+import { getList } from '@/queries/get';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FilterMatchMode } from 'primereact/api';
@@ -48,13 +49,7 @@ const SupplierList = () => {
 
     useEffect(() => {
         const fetching = async () => {
-            try {
-                const response = await fetch('/api/supplier', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
-                setList(await response.json());
-            } catch (_) {
-                console.error(_);
-            }
-
+            setList(await getList('supplier'));
             setLoading(false);
             initFilters();
         };

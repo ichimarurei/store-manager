@@ -127,12 +127,30 @@ const LoginPage = () => {
                                 <label htmlFor="username" className="block text-900 text-xl font-medium mb-2">
                                     Akun
                                 </label>
-                                <InputText id="username" type="text" placeholder="Nama akun" className="w-full md:w-30rem mb-5" style={{ padding: '1rem' }} value={username} onChange={({ target }) => setUsername(target.value)} />
+                                <InputText
+                                    id="username"
+                                    type="text"
+                                    placeholder="Nama akun"
+                                    className="w-full md:w-30rem mb-5"
+                                    style={{ padding: '1rem' }}
+                                    value={username}
+                                    onChange={({ target }) => setUsername(target.value)}
+                                    onKeyDown={async ({ key }) => key === 'Enter' && (await doSign())}
+                                />
 
                                 <label htmlFor="password" className="block text-900 font-medium text-xl mb-2">
                                     Sandi
                                 </label>
-                                <Password inputId="password" value={password} placeholder="Kata sandi" toggleMask className="w-full mb-5" inputClassName="w-full p-3 md:w-30rem" onChange={({ target }) => setPassword(target.value)} />
+                                <Password
+                                    inputId="password"
+                                    value={password}
+                                    placeholder="Kata sandi"
+                                    toggleMask
+                                    className="w-full mb-5"
+                                    inputClassName="w-full p-3 md:w-30rem"
+                                    onChange={({ target }) => setPassword(target.value)}
+                                    onKeyDown={async ({ key }) => key === 'Enter' && (await doSign())}
+                                />
 
                                 {showInstallLink && (
                                     <div className="flex align-items-center justify-content-between mb-5 gap-5">

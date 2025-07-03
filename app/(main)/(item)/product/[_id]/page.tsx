@@ -2,6 +2,8 @@
 
 import ProductForm from '@/component/item/product/form';
 import { toaster } from '@/lib/client.action';
+import { submitting } from '@/mutations/submit';
+import { getData } from '@/queries/get';
 import { Skeleton } from 'primereact/skeleton';
 import { Toast } from 'primereact/toast';
 import { useEffect, useRef, useState } from 'react';
@@ -31,17 +33,7 @@ const doSubmit = async (record: any, _id?: string) => {
     const validated = validator.safeParse(payloadSchema, record, { abortPipeEarly: true });
 
     if (validated.success) {
-        try {
-            const response = await fetch(_id ? `/api/product/${_id}` : '/api/product', {
-                method: !_id ? 'POST' : 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(record)
-            });
-            const result = await response.json();
-            saved = result?.saved ?? false;
-        } catch (_) {
-            console.error(_);
-        }
+        saved = await submitting('product', record, _id);
     } else {
         notices = validated.issues.map(({ message }) => message);
     }
@@ -61,8 +53,7 @@ const ProductPage = ({ params }: { params: Promise<{ _id: string }> }) => {
                 const { _id } = await params;
 
                 if (_id && _id !== 'baru') {
-                    const response = await fetch(`/api/product/${_id}`, { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
-                    setRecord(await response.json());
+                    setRecord(await getData('product', _id));
                 }
 
                 setId(_id);

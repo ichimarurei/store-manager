@@ -3,6 +3,7 @@
 import { TableBySales } from '@/component/item/sales/invoice.table';
 import { TableByItem } from '@/component/item/sales/item.table';
 import { SalesDocument } from '@/models/sales.schema';
+import { getList } from '@/queries/get';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import { FilterMatchMode } from 'primereact/api';
@@ -91,8 +92,7 @@ const SalesList = () => {
     useEffect(() => {
         const fetching = async () => {
             try {
-                const response = await fetch('/api/sales', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 }, cache: 'reload' });
-                const result: SalesDocument[] = await response.json();
+                const result: SalesDocument[] = await getList('sales');
                 setList(processSalesData(result, dateFilter));
             } catch (_) {
                 console.error(_);

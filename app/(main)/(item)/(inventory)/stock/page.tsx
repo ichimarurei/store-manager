@@ -3,6 +3,7 @@
 import { getDefaultProduct, processRangePrice } from '@/lib/client.action';
 import { doSyncStock } from '@/lib/server.action';
 import { ProductDocument } from '@/models/product.schema';
+import { getList } from '@/queries/get';
 import { FilterMatchMode } from 'primereact/api';
 import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
@@ -71,13 +72,7 @@ const ProductList = () => {
 
     useEffect(() => {
         const fetching = async () => {
-            try {
-                const response = await fetch('/api/stock', { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
-                setList(await response.json());
-            } catch (_) {
-                console.error(_);
-            }
-
+            setList(await getList('stock'));
             setLoading(false);
             initFilters();
         };

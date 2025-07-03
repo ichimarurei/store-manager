@@ -3,6 +3,8 @@
 import UserForm from '@/component/user/form';
 import { getDefaultPhoto, isRestricted, toaster } from '@/lib/client.action';
 import { Privilege } from '@/lib/enum';
+import { submitting } from '@/mutations/submit';
+import { getData } from '@/queries/get';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Skeleton } from 'primereact/skeleton';
@@ -27,17 +29,7 @@ const doSubmit = async (record: any, _id?: string) => {
     const validated = validator.safeParse(payloadSchema, record, { abortPipeEarly: true });
 
     if (validated.success) {
-        try {
-            const response = await fetch(_id ? `/api/user/${_id}` : '/api/user', {
-                method: !_id ? 'POST' : 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(record)
-            });
-            const result = await response.json();
-            saved = result?.saved ?? false;
-        } catch (_) {
-            console.error(_);
-        }
+        saved = await submitting('user', record, _id);
     } else {
         notices = validated.issues.map(({ message }) => message);
     }
@@ -59,8 +51,7 @@ const UserPage = ({ params }: { params: Promise<{ _id: string }> }) => {
                 const { _id } = await params;
 
                 if (_id && _id !== 'baru') {
-                    const response = await fetch(`/api/user/${_id}`, { method: 'GET', headers: { 'Content-Type': 'application/json' }, next: { revalidate: 60 } });
-                    setRecord(await response.json());
+                    setRecord(await getData('user', _id));
                 }
 
                 setId(_id);
