@@ -20,7 +20,7 @@
         "@vercel/analytics": "^1.5.0",
         "bufferutil": "^4.0.9",
         "canvas": "^3.1.2",
-        "chart.js": "4.2.1",
+        "chart.js": "4.4.9",
         "cloudinary": "^2.6.1",
         "crypto-js": "^4.2.0",
         "dayjs": "^1.11.13",
