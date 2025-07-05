@@ -12,12 +12,6 @@ import { useEffect, useState } from 'react';
 
 const linePlaceholder = 'dapat berisi kota domisili usaha, telepon, nomor WhatsApp, atau alamat URL website';
 
-const renderInfo = (extra?: string) => (
-    <small>
-        <mark>#</mark> {extra && `${extra}, dan untuk `}keperluan pada Kop Faktur
-    </small>
-);
-
 const InfoForm = ({ toast, record, doSubmit }: { toast: Toast | null; record: InfoDocument | undefined | null; doSubmit: (record: any) => Promise<SubmitResponse> }) => {
     const [name, setName] = useState('');
     const [address, setAddress] = useState('');
@@ -76,26 +70,21 @@ const InfoForm = ({ toast, record, doSubmit }: { toast: Toast | null; record: In
     return (
         <div className="card">
             <h5>Profil Usaha</h5>
-            <p>
-                Semua data profil usaha yang memiliki tanda <mark>#</mark> akan ditampilkan pada Kop Faktur dan yang tidak memiliki digunakan untuk tampilan pada sistem.
-            </p>
             <div className="p-fluid formgrid grid gap-field-parent">
                 <div className="field col-12 gap-field">
                     <label htmlFor="name">
                         Nama <sup className="text-red-500">*</sup>
                     </label>
                     <InputText id="name" type="text" value={name} onChange={({ target }) => setName(target.value)} />
-                    {renderInfo()}
                 </div>
                 <div className="field col-12 gap-field">
                     <label htmlFor="address">Alamat</label>
                     <InputTextarea id="address" rows={4} value={address} onChange={({ target }) => setAddress(target.value)} autoResize />
-                    {renderInfo()}
                 </div>
                 <div className="field col-12 md:col-6 gap-field">
                     <label htmlFor="line1">Info</label>
                     <InputText id="line1" type="text" placeholder="Baris pertama" value={line1} onChange={({ target }) => setLine1(target.value)} />
-                    {renderInfo(linePlaceholder)}
+                    <small>{linePlaceholder}</small>
                 </div>
                 <div className="field col-12 md:col-6 gap-field">
                     <label htmlFor="line2" className="hidden md:block">
@@ -103,17 +92,21 @@ const InfoForm = ({ toast, record, doSubmit }: { toast: Toast | null; record: In
                         &nbsp;
                     </label>
                     <InputText id="line2" type="text" placeholder="Baris kedua" value={line2} onChange={({ target }) => setLine2(target.value)} />
-                    {renderInfo(linePlaceholder)}
+                    <small>{linePlaceholder}</small>
                 </div>
                 <div className="field col-12 md:col-6">
                     <label htmlFor="supplier">Jatuh Tempo Hutang Pembelian</label>
-                    <InputNumber id="supplier" placeholder="Nominal" value={supplier} onValueChange={(e) => setSupplier(e.value ?? 0)} min={0} maxFractionDigits={0} />
-                    <small>*hari</small>
+                    <div className="p-inputgroup flex-1">
+                        <InputNumber id="supplier" placeholder="Nominal" value={supplier} onValueChange={(e) => setSupplier(e.value ?? 0)} min={0} maxFractionDigits={0} />
+                        <span className="p-inputgroup-addon">Hari</span>
+                    </div>
                 </div>
                 <div className="field col-12 md:col-6">
                     <label htmlFor="customer">Jatuh Tempo Hutang Pelanggan</label>
-                    <InputNumber id="customer" placeholder="Nominal" value={customer} onValueChange={(e) => setCustomer(e.value ?? 0)} min={0} maxFractionDigits={0} />
-                    <small>*hari</small>
+                    <div className="p-inputgroup flex-1">
+                        <InputNumber id="customer" placeholder="Nominal" value={customer} onValueChange={(e) => setCustomer(e.value ?? 0)} min={0} maxFractionDigits={0} />
+                        <span className="p-inputgroup-addon">Hari</span>
+                    </div>
                 </div>
             </div>
             <div className="p-fluid formgrid grid gap-field-parent">
